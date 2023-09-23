@@ -1,8 +1,8 @@
 功能描述:
-一、儲存使用Stable Diffusion產生之圖片本身以及圖片資訊(
+一、讓使用者上傳並儲存使用由Stable Diffusion產生之圖片以及圖片資訊(
 包含但不限於:
 0.txt2img generated image.
-1.Positive/Negative Prompts.
+1.Positive/Negative Prompts.(每一個Prompt都是一個Tag，方便之後搜尋)
 2.Checkpoint Model Name.
 3.VAE Model Name.
 4.Sampler Name.
@@ -28,5 +28,10 @@ ControlNet-
 18.Preprocessor preview(image file).
 19.JSON file.
 )
-二、
+1.使用NoSQL並以Json格式儲存每一筆資料，圖片檔另外儲存
+二、媒體庫瀏覽功能:
+1.圖片默認以建立日期為最新排序
+三、搜尋功能:
+1.可使用提示詞搜尋含有使用該詞的圖片
+2.可使用Lora模型名稱搜尋有使用該模型的圖片
 
