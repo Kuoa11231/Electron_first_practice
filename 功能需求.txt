@@ -2,36 +2,37 @@
 一、讓使用者上傳並儲存使用由Stable Diffusion產生之圖片以及圖片資訊(
 包含但不限於:
 0.txt2img generated image.
-1.Positive/Negative Prompts.(每一個Prompt都是一個Tag，方便之後搜尋)
+1.Positive/Negative Prompts.(每一個Prompt都是一個Tag，方便user搜尋)
 2.Checkpoint Model Name.
 3.VAE Model Name.
 4.Sampler Name.
-5.Sampling Steps.
-6.CFG Scale.
-7.Seed.
+5.Sampling Steps(interger).
+6.CFG Scale(decimal).
+7.Seed(interger).
 
 Hires.fix-
 8.Upscaler Name.
-9.Hires Step.
-10.Denoising Strength.
-11.Upscale by.
+9.Hires Step(interger).
+10.Denoising Strength(decimal).
+11.Upscale by(decimal).
 
 Lora-
 12.Lora Model Name.
-13.Weight.
+13.Weight(decimal).
 14.The specific prompts optimized for the lora model.
 
 ControlNet-
 15.Preprocessor Name.
 16.Model Name.
-17.Control Weight.
+17.Control Weight(decimal).
 18.Preprocessor preview(image file).
-19.JSON file.
+19.JSON file of the details.
 )
-1.使用NoSQL並以Json格式儲存每一筆資料，圖片檔另外儲存
+1.使用NoSQL資料庫-MongoDB並以Json格式儲存資料及圖片檔
 二、媒體庫瀏覽功能:
 1.圖片默認以建立日期為最新排序
+2.基本的CRUD
 三、搜尋功能:
-1.可使用提示詞搜尋含有使用該詞的圖片
-2.可使用Lora模型名稱搜尋有使用該模型的圖片
+1.可使用Prompts搜尋含有使用該提示詞的圖片
+2.可使用Lora Model Name搜尋有使用該Lora模型的圖片
 

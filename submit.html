@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<style>
+  h1 {
+    color: aliceblue;
+  }
+</style>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <title>Hello from Electron renderer!</title>
+  </head>
+  <body>
+    <button id="goToPreview">前往媒體庫</button>
+
+    <!-- 第一組 -->
+    <form id="combined-form">
+      <h3>General Setting</h3>
+      <label for="image-upload">txt2img generated image:</label>
+      <input type="file" id="txt2img" accept="image/*" />
+      <br />
+
+      <label for="positive prompt"
+        >Positive Prompts (comma separated for multiple):</label
+      >
+      <input type="text" id="pos-prompts" />
+      <br />
+
+      <label for="negative prompts"
+        >Negative Prompts (comma separated for multiple):</label
+      >
+      <input type="text" id="neg-prompts" />
+      <br />
+
+      <label for="checkpoint-model-name">Checkpoint Model Name:</label>
+      <input type="text" id="checkpoint-model-name" />
+      <br />
+
+      <label for="vae-model-name">VAE Model Name:</label>
+      <input type="text" id="vae-model-name" />
+      <br />
+
+      <label for="sampler-name">Sampler Name:</label>
+      <input type="text" id="sampler-name" />
+      <br />
+
+      <label for="sampling-steps">Sampling Steps:</label>
+      <input type="text" id="sampling-steps" />
+      <br />
+
+      <label for="CFG-scale">CFG Scale:</label>
+      <input type="text" id="CFG-scale" />
+      <br />
+
+      <label for="seed">Seed:</label>
+      <input type="text" id="seed" />
+      <br />
+      <!-- ... Continue in similar fashion for other inputs of this group ... -->
+
+      <!-- 第二組 -->
+      <h3>Hires.fix</h3>
+      <label for="upscaler-name">Upscaler Name:</label>
+      <input type="text" id="upscaler-name" />
+      <br />
+
+      <label for="hires-step">Hires Step:</label>
+      <input type="text" id="hires-step" />
+      <br />
+
+      <label for="denoising-strength">Denoising strength:</label>
+      <input type="text" id="denoising-strength" />
+      <br />
+
+      <label for="upscale-by">Upscale By:</label>
+      <input type="text" id="upscale-by" />
+      <br />
+      <!-- ... Continue in similar fashion for other inputs of this group ... -->
+
+      <!-- 第三組 -->
+      <h3>Lora</h3>
+      <label for="lora-model-name">Lora Model Name:</label>
+      <input type="text" id="lora-model-name" />
+      <br />
+
+      <label for="weight">Weight:</label>
+      <input type="text" id="weight" />
+      <br />
+
+      <label for="op-prompts">Optimized Prompts:</label>
+      <input type="text" id="op-prompts" />
+      <br />
+      <!-- ... Continue in similar fashion for other inputs of this group ... -->
+
+      <!-- 第四組 -->
+      <h3>ControlNet</h3>
+      <label for="preprocessor-name">Preprocessor Name:</label>
+      <input type="text" id="preprocessor-name" />
+      <br />
+
+      <label for="ControlNet-weight">ControlNet weight:</label>
+      <input type="text" id="ControlNet-weight" />
+      <br />
+
+      <label for="preprocessor-preview">Preprocessor Preview:</label>
+      <input type="file" id="preprocessor-preview" accept="image/*" />
+      <br />
+
+      <label for="JSON-file-for-pose">JSON file for pose details:</label>
+      <input type="file" id="JSON-file-for-pose" accept="JSON/*" />
+      <br />
+
+      <input type="hidden" id="submit-timestamp" name="submit-timestamp" />
+
+      <button type="submit">Submit All</button>
+    </form>
+  </body>
+  <script src="./submit.js"></script>
+</html>

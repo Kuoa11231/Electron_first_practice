@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Preview</title>
+    <style>
+      #imageGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+      }
+      img {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="goToIndex">前往上傳頁面</button>
+    <div id="topbar"></div>
+
+    <div id="imageGrid"></div>
+  </body>
+  <script src="./preview.js"></script>
+</html>
