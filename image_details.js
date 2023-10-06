@@ -1,7 +1,37 @@
 const { ipcRenderer } = require("electron");
+const { remote } = require("electron");
+
+document.addEventListener("DOMContentLoaded", () => {
+  const storedSid = window.electron.getGlobal("currentSid");
+  if (storedSid) {
+    ipcRenderer.send("re-fetch-details", storedSid);
+    console.log("Requesting re-fetch of details for sid:", storedSid);
+  }
+});
+
+//左鍵點擊span時，拷貝其內容到剪貼版
+document.querySelectorAll("span").forEach((span) => {
+  span.addEventListener("click", function () {
+    copyToClipboard(this.textContent);
+  });
+});
+
+//拷貝內容
+function copyToClipboard(text) {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      console.log("Text copied to clipboard successfully!");
+    })
+    .catch((err) => {
+      console.error("Failed to copy text to clipboard: ", err);
+    });
+}
 
 // Listen for the image details from the main process
 ipcRenderer.on("send-image-details", (event, imageDetails) => {
+  ipcRenderer.send("set-current-sid", imageDetails.sid);
+
   if (!imageDetails || !imageDetails.txt2img) {
     console.error("Invalid imageDetails received in renderer:", imageDetails);
     return;
@@ -85,6 +115,3 @@ ipcRenderer.on("send-image-details", (event, imageDetails) => {
     URL.revokeObjectURL(url);
   });
 });
-
-// Ask main process for the image details when page is loaded
-ipcRenderer.send("request-image-details");

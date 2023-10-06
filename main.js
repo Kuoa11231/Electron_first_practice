@@ -4,9 +4,18 @@ require("electron-reload")(__dirname);
 const fs = require("fs");
 const { ObjectId } = require("mongodb");
 const crypto = require("crypto");
-
 const url = "mongodb://127.0.0.1:27017";
 const dbName = "local";
+
+function generateHashSID() {
+  // Create a random set of bytes
+  const randomBytes = crypto.randomBytes(16);
+
+  // Hash those bytes using MD5
+  const hash = crypto.createHash("md5").update(randomBytes).digest("hex");
+
+  return hash;
+}
 
 let db;
 let mainWindow;
@@ -50,9 +59,8 @@ ipcMain.on("navigate", (event, page) => {
 ipcMain.on("data-from-renderer", async (event, data) => {
   console.log("Received data from renderer:", data);
 
-  data.sid = crypto.randomInt(1, 1 << 16);
+  data.sid = generateHashSID();
   console.log("Generated SID:", data.sid);
-  // Generates a random integer between 1 and 65535
 
   if (!data.txt2img) {
     console.error("txt2img file not provided!");
@@ -125,10 +133,20 @@ ipcMain.on("fetch-images", async (event) => {
   }
 });
 
+ipcMain.on("set-current-sid", (event, sid) => {
+  global.currentSid = sid;
+});
+
 //點擊圖片時，載入圖片詳細資訊頁面
 ipcMain.on("load-image-details", async (event, sid) => {
   const collection = db.collection("text2img_generated_info");
-  const imageDetails = await collection.findOne({ sid: parseInt(sid) });
+  const imageDetails = await collection.findOne({ sid: sid });
+
+  if (!imageDetails) {
+    console.error(`No details found for sid: ${sid} in the database.`);
+    return;
+  }
+  global.currentSid = imageDetails.sid;
 
   console.log("Fetching details for sid:", sid);
   console.log("Fetched imageDetails:", imageDetails);
@@ -141,4 +159,20 @@ ipcMain.on("load-image-details", async (event, sid) => {
   mainWindow.webContents.once("did-finish-load", () => {
     mainWindow.webContents.send("send-image-details", imageDetails);
   });
+});
+
+ipcMain.on("re-fetch-details", async (event, sid) => {
+  console.log("Received re-fetch request for sid:", sid);
+  const collection = db.collection("text2img_generated_info");
+  const imageDetails = await collection.findOne({ sid: sid });
+
+  if (!imageDetails) {
+    console.error(`No details found for sid: ${sid} in the database.`);
+    return;
+  }
+
+  console.log("Re-fetching details for sid:", sid);
+
+  // Send the image details back to the renderer
+  event.reply("send-image-details", imageDetails);
 });
