@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const { MongoClient } = require("mongodb");
 require("electron-reload")(__dirname);
 const fs = require("fs");
+const { ObjectId } = require("mongodb");
+const crypto = require("crypto");
 
 const url = "mongodb://127.0.0.1:27017";
 const dbName = "local";
@@ -47,6 +49,10 @@ ipcMain.on("navigate", (event, page) => {
 //將資料處理後寫入資料庫
 ipcMain.on("data-from-renderer", async (event, data) => {
   console.log("Received data from renderer:", data);
+
+  data.sid = crypto.randomInt(1, 1 << 16);
+  console.log("Generated SID:", data.sid);
+  // Generates a random integer between 1 and 65535
 
   if (!data.txt2img) {
     console.error("txt2img file not provided!");
@@ -113,10 +119,26 @@ ipcMain.on("fetch-images", async (event) => {
   try {
     const images = await collection.find({}).toArray();
     console.log("Fetched images from MongoDB:", images);
+    event.reply("send-images", images);
   } catch (error) {
     console.error("Error fetching images from MongoDB:", error);
   }
+});
 
-  const images = await collection.find({}).toArray();
-  event.reply("send-images", images);
+//點擊圖片時，載入圖片詳細資訊頁面
+ipcMain.on("load-image-details", async (event, sid) => {
+  const collection = db.collection("text2img_generated_info");
+  const imageDetails = await collection.findOne({ sid: parseInt(sid) });
+
+  console.log("Fetching details for sid:", sid);
+  console.log("Fetched imageDetails:", imageDetails);
+
+  mainWindow.loadFile("image_details.html", {
+    query: { sid: sid },
+  });
+
+  // Send the image details after the page has finished loading
+  mainWindow.webContents.once("did-finish-load", () => {
+    mainWindow.webContents.send("send-image-details", imageDetails);
+  });
 });

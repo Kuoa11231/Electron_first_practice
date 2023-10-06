@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Details</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+
+      img {
+        max-width: 90%;
+        margin: 20px 0;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .details {
+        margin-top: 20px;
+      }
+
+      .details div {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Images</h2>
+    <img id="text2img" src="" alt="Text2Img" />
+    <img id="preprocessorPreview" src="" alt="Preprocessor Preview" />
+
+    <div class="details">
+      <!-- General -->
+      <div><strong>Pos Prompts:</strong> <span id="posPrompts"></span></div>
+      <div><strong>Neg Prompts:</strong> <span id="negPrompts"></span></div>
+      <div>
+        <strong>Checkpoint Model Name:</strong>
+        <span id="checkpointModelName"></span>
+      </div>
+      <div><strong>samplerName:</strong> <span id="samplerName"></span></div>
+      <div>
+        <strong>samplingSteps:</strong> <span id="samplingSteps"></span>
+      </div>
+      <div><strong>CFGScale:</strong> <span id="CFGScale"></span></div>
+      <div><strong>seed:</strong> <span id="seed"></span></div>
+
+      <!-- 第二組 - Hires.fix -->
+      <div><strong>upscalerName:</strong> <span id="upscalerName"></span></div>
+
+      <div><strong>hiresStep:</strong> <span id="hiresStep"></span></div>
+
+      <div>
+        <strong>denoisingStrength:</strong> <span id="denoisingStrength"></span>
+      </div>
+
+      <div><strong>upscaleBy:</strong> <span id="upscaleBy"></span></div>
+
+      <!-- 第三組 - Lora -->
+      <div>
+        <strong>loraModelName:</strong> <span id="loraModelName"></span>
+      </div>
+
+      <div><strong>weight:</strong> <span id="weight"></span></div>
+
+      <div><strong>opPrompts:</strong> <span id="opPrompts"></span></div>
+
+      <!-- 第四組 - ControlNet -->
+      <div>
+        <strong>preprocessorName:</strong> <span id="preprocessorName"></span>
+      </div>
+
+      <div>
+        <strong>controlNetWeight:</strong> <span id="controlNetWeight"></span>
+      </div>
+
+      <div>
+        <strong>JSONFileForPose:</strong> <span id="JSONFileForPose"></span>
+      </div>
+
+      <!-- Others -->
+      <div><strong>Timestamp:</strong> <span id="timestamp"></span></div>
+    </div>
+
+    <div>
+      <h2>JSON File</h2>
+      <button id="downloadJSON">Download JSON</button>
+    </div>
+  </body>
+  <script src="image_details.js"></script>
+</html>
