@@ -3,21 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Preview</title>
     <style>
       #imageGrid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(
+          5,
+          256px
+        ); /* Fix the grid to 5 columns of 256px width each */
         gap: 16px;
+        justify-content: center; /* Center the entire grid horizontally on the page */
       }
+
+      .image-container {
+        width: 256px;
+        height: 512px;
+        overflow: hidden; /* Ensures nothing spills out of the div */
+        position: relative; /* Allows positioning of children elements */
+      }
+
       img {
-        width: 100%;
-        height: auto;
+        position: absolute;
+        max-width: 100%; /* Maximum width is the container width */
+        max-height: 100%; /* Maximum height is the container height */
+        top: 50%; /* Starting point to center the image vertically */
+        left: 50%; /* Starting point to center the image horizontally */
+        transform: translate(
+          -50%,
+          -50%
+        ); /* Shift the image 50% of its width and height */
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
       }
     </style>
   </head>
   <body>
-    <button id="goToIndex">前往上傳頁面</button>
+    <button id="goToIndex">Go to Submit</button>
     <div id="topbar"></div>
 
     <div id="imageGrid"></div>

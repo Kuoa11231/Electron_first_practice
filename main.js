@@ -22,8 +22,9 @@ let mainWindow;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1600,
+    height: 900,
+    title: "Text2Img Info Storager",
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -31,6 +32,10 @@ const createWindow = () => {
   });
 
   mainWindow.loadFile("submit.html");
+  mainWindow.webContents.on("did-finish-load", () => {
+    mainWindow.setTitle("Text2Img Info Storager");
+  });
+
   mainWindow.webContents.openDevTools();
 };
 
@@ -105,15 +110,19 @@ ipcMain.on("data-from-renderer", async (event, data) => {
 
     const collection = db.collection("text2img_generated_info");
 
+    console.log("Before insertion");
     collection.insertOne(data, (err, result) => {
+      console.log("Inside insertion callback");
       if (err) {
         console.error("MongoDB insertion error:", err);
         event.reply("data-insertion-result", "fail");
         throw err;
+      } else {
+        console.log("Data inserted to MongoDB:", result);
+        event.reply("data-insertion-result", "success");
       }
-      console.log("Data inserted to MongoDB:", result);
-      event.reply("data-insertion-result", "success");
     });
+    console.log("After insertion");
   } catch (error) {
     console.error("Error processing files or interacting with MongoDB:", error);
     event.reply("data-insertion-result", "fail");
@@ -126,7 +135,6 @@ ipcMain.on("fetch-images", async (event) => {
   const collection = db.collection("text2img_generated_info");
   try {
     const images = await collection.find({}).toArray();
-    console.log("Fetched images from MongoDB:", images);
     event.reply("send-images", images);
   } catch (error) {
     console.error("Error fetching images from MongoDB:", error);

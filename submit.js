@@ -5,6 +5,7 @@ document.getElementById("goToPreview").addEventListener("click", () => {
   ipcRenderer.send("navigate", "preview.html");
 });
 
+//傳遞資料至主進程
 document
   .getElementById("combined-form")
   .addEventListener("submit", function (event) {
@@ -64,3 +65,11 @@ document
     // 發送數據到主進程
     ipcRenderer.send("data-from-renderer", data);
   });
+
+ipcRenderer.on("data-insertion-result", (event, status) => {
+  if (status === "success") {
+    alert("Submission Successful: Your data has been submitted successfully.");
+  } else if (status === "fail") {
+    alert("Submission Failed: An error occurred while submitting your data.");
+  }
+});

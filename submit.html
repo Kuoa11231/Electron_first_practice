@@ -1,7 +1,47 @@
 <!DOCTYPE html>
 <style>
+  body {
+    display: flex;
+    justify-content: center; /* centers items horizontally */
+    align-items: center; /* centers items vertically */
+    height: 100vh; /* full viewport height */
+    margin: 0; /* removes default margins */
+    font-family: "Arial", sans-serif; /* just to give it a nicer font, optional */
+    background-color: #f4f4f4; /* just to give it a lighter background, optional */
+  }
+
   h1 {
     color: aliceblue;
+  }
+
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center; /* vertically align items in the middle */
+    gap: 10px; /* space between items */
+    margin-bottom: 10px; /* optional: to give some space between each pair */
+  }
+
+  .input-group label {
+    flex: 1; /* allows label to take up half the width */
+  }
+
+  .input-group input,
+  .input-group button {
+    flex: 2; /* allows input/button to take up the other half (or more) */
   }
 </style>
 <html>
@@ -15,107 +55,123 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello from Electron renderer!</title>
   </head>
   <body>
-    <button id="goToPreview">前往媒體庫</button>
-
     <!-- 第一組 -->
     <form id="combined-form">
+      <button id="goToPreview">Go to Preview</button>
+
       <h3>General Setting</h3>
-      <label for="image-upload">txt2img generated image:</label>
-      <input type="file" id="txt2img" accept="image/*" />
-      <br />
+      <div class="input-group">
+        <label for="image-upload">txt2img generated image:</label>
+        <input type="file" id="txt2img" accept="image/*" />
+        <br />
+      </div>
 
-      <label for="positive prompt"
-        >Positive Prompts (comma separated for multiple):</label
-      >
-      <input type="text" id="pos-prompts" />
-      <br />
-
-      <label for="negative prompts"
-        >Negative Prompts (comma separated for multiple):</label
-      >
-      <input type="text" id="neg-prompts" />
-      <br />
-
-      <label for="checkpoint-model-name">Checkpoint Model Name:</label>
-      <input type="text" id="checkpoint-model-name" />
-      <br />
-
-      <label for="vae-model-name">VAE Model Name:</label>
-      <input type="text" id="vae-model-name" />
-      <br />
-
-      <label for="sampler-name">Sampler Name:</label>
-      <input type="text" id="sampler-name" />
-      <br />
-
-      <label for="sampling-steps">Sampling Steps:</label>
-      <input type="text" id="sampling-steps" />
-      <br />
-
-      <label for="CFG-scale">CFG Scale:</label>
-      <input type="text" id="CFG-scale" />
-      <br />
-
-      <label for="seed">Seed:</label>
-      <input type="text" id="seed" />
-      <br />
-      <!-- ... Continue in similar fashion for other inputs of this group ... -->
+      <div class="input-group">
+        <label for="positive prompt">Positive Prompts:</label>
+        <input type="text" id="pos-prompts" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="negative prompts">Negative Prompts:</label>
+        <input type="text" id="neg-prompts" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="checkpoint-model-name">Checkpoint Model Name:</label>
+        <input type="text" id="checkpoint-model-name" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="vae-model-name">VAE Model Name:</label>
+        <input type="text" id="vae-model-name" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="sampler-name">Sampler Name:</label>
+        <input type="text" id="sampler-name" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="sampling-steps">Sampling Steps:</label>
+        <input type="text" id="sampling-steps" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="CFG-scale">CFG Scale:</label>
+        <input type="text" id="CFG-scale" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="seed">Seed:</label>
+        <input type="text" id="seed" />
+        <br />
+      </div>
 
       <!-- 第二組 -->
       <h3>Hires.fix</h3>
-      <label for="upscaler-name">Upscaler Name:</label>
-      <input type="text" id="upscaler-name" />
-      <br />
-
-      <label for="hires-step">Hires Step:</label>
-      <input type="text" id="hires-step" />
-      <br />
-
-      <label for="denoising-strength">Denoising strength:</label>
-      <input type="text" id="denoising-strength" />
-      <br />
-
-      <label for="upscale-by">Upscale By:</label>
-      <input type="text" id="upscale-by" />
-      <br />
-      <!-- ... Continue in similar fashion for other inputs of this group ... -->
+      <div class="input-group">
+        <label for="upscaler-name">Upscaler Name:</label>
+        <input type="text" id="upscaler-name" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="hires-step">Hires Step:</label>
+        <input type="text" id="hires-step" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="denoising-strength">Denoising strength:</label>
+        <input type="text" id="denoising-strength" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="upscale-by">Upscale By:</label>
+        <input type="text" id="upscale-by" />
+        <br />
+      </div>
 
       <!-- 第三組 -->
       <h3>Lora</h3>
-      <label for="lora-model-name">Lora Model Name:</label>
-      <input type="text" id="lora-model-name" />
-      <br />
-
-      <label for="weight">Weight:</label>
-      <input type="text" id="weight" />
-      <br />
-
-      <label for="op-prompts">Optimized Prompts:</label>
-      <input type="text" id="op-prompts" />
-      <br />
-      <!-- ... Continue in similar fashion for other inputs of this group ... -->
+      <div class="input-group">
+        <label for="lora-model-name">Lora Model Name:</label>
+        <input type="text" id="lora-model-name" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="weight">Weight:</label>
+        <input type="text" id="weight" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="op-prompts">Optimized Prompts:</label>
+        <input type="text" id="op-prompts" />
+        <br />
+      </div>
 
       <!-- 第四組 -->
       <h3>ControlNet</h3>
-      <label for="preprocessor-name">Preprocessor Name:</label>
-      <input type="text" id="preprocessor-name" />
-      <br />
-
-      <label for="ControlNet-weight">ControlNet weight:</label>
-      <input type="text" id="ControlNet-weight" />
-      <br />
-
-      <label for="preprocessor-preview">Preprocessor Preview:</label>
-      <input type="file" id="preprocessor-preview" accept="image/*" />
-      <br />
-
-      <label for="JSON-file-for-pose">JSON file for pose details:</label>
-      <input type="file" id="JSON-file-for-pose" accept="JSON/*" />
-      <br />
-
+      <div class="input-group">
+        <label for="preprocessor-name">Preprocessor Name:</label>
+        <input type="text" id="preprocessor-name" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="ControlNet-weight">ControlNet weight:</label>
+        <input type="text" id="ControlNet-weight" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="preprocessor-preview">Preprocessor Preview:</label>
+        <input type="file" id="preprocessor-preview" accept="image/*" />
+        <br />
+      </div>
+      <div class="input-group">
+        <label for="JSON-file-for-pose">JSON file for pose details:</label>
+        <input type="file" id="JSON-file-for-pose" accept="JSON/*" />
+        <br />
+      </div>
       <input type="hidden" id="submit-timestamp" name="submit-timestamp" />
 
       <button type="submit">Submit All</button>

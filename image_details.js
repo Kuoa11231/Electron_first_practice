@@ -1,6 +1,10 @@
 const { ipcRenderer } = require("electron");
 const { remote } = require("electron");
 
+document.getElementById("goToPreview").addEventListener("click", () => {
+  ipcRenderer.send("navigate", "preview.html");
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const storedSid = window.electron.getGlobal("currentSid");
   if (storedSid) {
