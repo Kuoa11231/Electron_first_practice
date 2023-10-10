@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", sans-serif;
+        padding-left: 50px;
+        padding-right: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #e4e4e4;
       }
 
       img {
-        max-width: 90%;
-        margin: 20px 0;
+        width: 90%;
+        margin-left: 40px;
+        margin-right: 40px;
       }
 
       button {
@@ -21,22 +28,47 @@
         padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
-        margin-top: 20px;
+        margin: 20px 0;
       }
 
       button:hover {
         background-color: #0056b3;
       }
 
+      .container {
+        display: flex;
+        width: 100%;
+      }
+
+      .image {
+        margin-left: 50px;
+        margin-right: 10px;
+        padding: 20px;
+        flex-basis: 45%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
       .details {
-        margin-top: 20px;
+        margin-right: 50px;
+        margin-left: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 30px;
+        padding-right: 10px;
+        flex-basis: 45%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
 
       .details div {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
 
       span {
+        font-size: 1.5em; /* Adjust this value as per your requirement */
         padding: 2px 4px;
         display: inline-block;
         transition: background-color 0.3s;
@@ -46,71 +78,90 @@
         cursor: pointer;
         background-color: #b8b8b8;
       }
+
+      strong {
+        font-size: larger;
+      }
     </style>
   </head>
+
   <body>
     <button id="goToPreview">Back to Preview</button>
 
-    <h2>Images</h2>
-    <img id="text2img" src="" alt="Text2Img" />
-    <img id="preprocessorPreview" src="" alt="Preprocessor Preview" />
-
-    <div class="details">
-      <!-- General -->
-      <div><strong>Pos Prompts:</strong> <span id="posPrompts"></span></div>
-      <div><strong>Neg Prompts:</strong> <span id="negPrompts"></span></div>
-      <div>
-        <strong>Checkpoint Model Name:</strong>
-        <span id="checkpointModelName"></span>
-      </div>
-      <div><strong>samplerName:</strong> <span id="samplerName"></span></div>
-      <div>
-        <strong>samplingSteps:</strong> <span id="samplingSteps"></span>
-      </div>
-      <div><strong>CFGScale:</strong> <span id="CFGScale"></span></div>
-      <div><strong>seed:</strong> <span id="seed"></span></div>
-
-      <!-- 第二組 - Hires.fix -->
-      <div><strong>upscalerName:</strong> <span id="upscalerName"></span></div>
-
-      <div><strong>hiresStep:</strong> <span id="hiresStep"></span></div>
-
-      <div>
-        <strong>denoisingStrength:</strong> <span id="denoisingStrength"></span>
+    <div class="container">
+      <div class="image">
+        <h2 style="text-align: center">Images</h2>
+        <img id="text2img" src="" alt="Text2Img" />
+        <img id="preprocessorPreview" src="" alt="Preprocessor Preview" />
       </div>
 
-      <div><strong>upscaleBy:</strong> <span id="upscaleBy"></span></div>
+      <div class="details">
+        <!-- General -->
+        <h2>General</h2>
+        <div><strong>Pos Prompts:</strong> <span id="posPrompts"></span></div>
+        <div><strong>Neg Prompts:</strong> <span id="negPrompts"></span></div>
+        <div>
+          <strong>Checkpoint Model Name:</strong>
+          <span id="checkpointModelName"></span>
+        </div>
+        <div><strong>Sampler Name:</strong> <span id="samplerName"></span></div>
+        <div>
+          <strong>Sampling Steps:</strong> <span id="samplingSteps"></span>
+        </div>
+        <div><strong>CFGScale:</strong> <span id="CFGScale"></span></div>
+        <div><strong>Seed:</strong> <span id="seed"></span></div>
 
-      <!-- 第三組 - Lora -->
-      <div>
-        <strong>loraModelName:</strong> <span id="loraModelName"></span>
+        <!-- 第二組 - Hires.fix -->
+        <h2>Hires.fix</h2>
+        <div>
+          <strong>Upscaler Name:</strong> <span id="upscalerName"></span>
+        </div>
+
+        <div><strong>Hires Step:</strong> <span id="hiresStep"></span></div>
+
+        <div>
+          <strong>Denoising Strength:</strong>
+          <span id="denoisingStrength"></span>
+        </div>
+
+        <div><strong>Upscale By:</strong> <span id="upscaleBy"></span></div>
+
+        <!-- 第三組 - Lora -->
+        <h2>Lora</h2>
+        <div>
+          <strong>Lora Model Name:</strong> <span id="loraModelName"></span>
+        </div>
+
+        <div><strong>Weight:</strong> <span id="weight"></span></div>
+
+        <div>
+          <strong>Optimized Prompts:</strong> <span id="opPrompts"></span>
+        </div>
+
+        <!-- 第四組 - ControlNet -->
+        <h2>ControlNet</h2>
+        <div>
+          <strong>Preprocessor Name:</strong>
+          <span id="preprocessorName"></span>
+        </div>
+
+        <div>
+          <strong>ControlNet Weight:</strong>
+          <span id="controlNetWeight"></span>
+        </div>
+
+        <div>
+          <strong>JSON File For Pose:</strong>
+          <span id="JSONFileForPose"></span>
+          <button id="downloadJSON">Download JSON</button>
+        </div>
+
+        <!-- Others -->
+        <h2>Others</h2>
+        <div><strong>Upload Time:</strong> <span id="timestamp"></span></div>
       </div>
-
-      <div><strong>weight:</strong> <span id="weight"></span></div>
-
-      <div><strong>opPrompts:</strong> <span id="opPrompts"></span></div>
-
-      <!-- 第四組 - ControlNet -->
-      <div>
-        <strong>preprocessorName:</strong> <span id="preprocessorName"></span>
-      </div>
-
-      <div>
-        <strong>controlNetWeight:</strong> <span id="controlNetWeight"></span>
-      </div>
-
-      <div>
-        <strong>JSONFileForPose:</strong> <span id="JSONFileForPose"></span>
-      </div>
-
-      <!-- Others -->
-      <div><strong>Timestamp:</strong> <span id="timestamp"></span></div>
     </div>
 
-    <div>
-      <h2>JSON File</h2>
-      <button id="downloadJSON">Download JSON</button>
-    </div>
+    <script src="image_details.js"></script>
   </body>
-  <script src="image_details.js"></script>
 </html>

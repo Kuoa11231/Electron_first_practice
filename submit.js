@@ -64,12 +64,19 @@ document
 
     // 發送數據到主進程
     ipcRenderer.send("data-from-renderer", data);
+    ipcRenderer.once("data-insertion-success", (event, status) => {
+      if (status === "true") {
+        alert(
+          "Submission Successful: Your data has been submitted successfully."
+        );
+      } else {
+        ipcRenderer.once("data-insertion-fail", (event, status) => {
+          if (status === "true") {
+            alert(
+              "Submission Failed: An error occurred while submitting your data."
+            );
+          }
+        });
+      }
+    });
   });
-
-ipcRenderer.on("data-insertion-result", (event, status) => {
-  if (status === "success") {
-    alert("Submission Successful: Your data has been submitted successfully.");
-  } else if (status === "fail") {
-    alert("Submission Failed: An error occurred while submitting your data.");
-  }
-});

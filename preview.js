@@ -28,12 +28,35 @@ ipcRenderer.on("send-images", (event, imagesDocuments) => {
         ipcRenderer.send("load-image-details", sid);
       });
 
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.classList.add("delete-image-button");
+
+      deleteBtn.addEventListener("click", function () {
+        const sid = img.getAttribute("data-sid");
+        if (
+          confirm("Are you sure you want to delete this image and its data?")
+        ) {
+          ipcRenderer.send("delete-image", sid);
+        }
+      });
+
       const div = document.createElement("div");
       div.classList.add("image-container");
       div.appendChild(img);
+      div.appendChild(deleteBtn);
       imageGrid.appendChild(div);
     }
   });
+});
+
+ipcRenderer.on("image-deletion-result", (event, status) => {
+  if (status === "success") {
+    alert("Successfully deleted the image and its data.");
+    location.reload();
+  } else if (status === "fail") {
+    alert("Failed to delete the image and its data. Please try again.");
+  }
 });
 
 ipcRenderer.send("fetch-images");

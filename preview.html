@@ -4,8 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+      body {
+        background-color: #e4e4e4;
+      }
       #imageGrid {
+        padding-top: 50px;
         display: grid;
+        background-color: #ffffff;
+        border-radius: 10px; /* optional: for rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* optional: for a light shadow */
         grid-template-columns: repeat(
           5,
           256px
@@ -33,6 +40,10 @@
         ); /* Shift the image 50% of its width and height */
       }
 
+      img:hover {
+        cursor: pointer;
+      }
+
       button {
         background-color: #007bff;
         color: white;
@@ -46,12 +57,26 @@
       button:hover {
         background-color: #0056b3;
       }
+
+      .delete-image-button {
+        margin-top: 10px;
+        background-color: #ff4136; /* Red */
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .delete-image-button:hover {
+        background-color: #e70f00; /* Darker Red */
+      }
     </style>
   </head>
   <body>
     <button id="goToIndex">Go to Submit</button>
     <div id="topbar"></div>
-
+    <h2 style="text-align: center">Image Grid</h2>
     <div id="imageGrid"></div>
   </body>
   <script src="./preview.js"></script>

@@ -69,11 +69,13 @@ ipcMain.on("data-from-renderer", async (event, data) => {
 
   if (!data.txt2img) {
     console.error("txt2img file not provided!");
-    event.reply("data-insertion-result", "fail");
-    return;
+    event.reply("data-insertion-failure", "true");
+    return 1;
   }
 
   try {
+    console.log("Starting file processing..."); // Debug line
+
     // For txt2img
     const txt2imgBuffer = fs.readFileSync(data.txt2img);
     data.txt2img = txt2imgBuffer;
@@ -108,24 +110,20 @@ ipcMain.on("data-from-renderer", async (event, data) => {
       delete data.preprocessorPreviewPath;
     }
 
+    console.log("File processing completed successfully."); // Debug line
+
     const collection = db.collection("text2img_generated_info");
 
-    console.log("Before insertion");
-    collection.insertOne(data, (err, result) => {
-      console.log("Inside insertion callback");
-      if (err) {
-        console.error("MongoDB insertion error:", err);
-        event.reply("data-insertion-result", "fail");
-        throw err;
-      } else {
-        console.log("Data inserted to MongoDB:", result);
-        event.reply("data-insertion-result", "success");
-      }
-    });
-    console.log("After insertion");
-  } catch (error) {
-    console.error("Error processing files or interacting with MongoDB:", error);
-    event.reply("data-insertion-result", "fail");
+    console.log("About to insert into MongoDB..."); // Debug line
+
+    await collection.insertOne(data);
+
+    console.log("Data inserted to MongoDB");
+    event.reply("data-insertion-success", "true");
+  } catch (err) {
+    console.error("Caught an error:", err.message); // Debug line
+    console.error("Error processing files or interacting with MongoDB:", err);
+    event.reply("data-insertion-failure", "true");
   }
 });
 
@@ -183,4 +181,19 @@ ipcMain.on("re-fetch-details", async (event, sid) => {
 
   // Send the image details back to the renderer
   event.reply("send-image-details", imageDetails);
+});
+
+ipcMain.on("delete-image", async (event, sid) => {
+  const collection = db.collection("text2img_generated_info");
+  try {
+    const result = await collection.deleteOne({ sid: sid });
+    if (result.deletedCount === 1) {
+      event.reply("image-deletion-result", "success");
+    } else {
+      event.reply("image-deletion-result", "fail");
+    }
+  } catch (error) {
+    console.error("Error deleting image from MongoDB:", error);
+    event.reply("image-deletion-result", "fail");
+  }
 });
