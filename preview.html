@@ -71,12 +71,18 @@
       .delete-image-button:hover {
         background-color: #e70f00; /* Darker Red */
       }
+
+      .topbar {
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
-    <button id="goToIndex">Go to Submit</button>
-    <div id="topbar"></div>
-    <h2 style="text-align: center">Image Grid</h2>
+    <div class="topbar">
+      <button id="goToIndex">Go to Submit</button>
+
+      <h1 style="text-align: center; margin-top: 0px">Image Preview</h1>
+    </div>
     <div id="imageGrid"></div>
   </body>
   <script src="./preview.js"></script>
