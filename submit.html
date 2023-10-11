@@ -2,22 +2,19 @@
 <style>
   body {
     display: flex;
-    justify-content: center; /* centers items horizontally */
-    align-items: center; /* centers items vertically */
-    height: 100vh; /* full viewport height */
-    margin: 0; /* removes default margins */
-    font-family: "Arial", sans-serif; /* just to give it a nicer font, optional */
-    background-color: #f4f4f4; /* just to give it a lighter background, optional */
-  }
-
-  h1 {
-    color: aliceblue;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: auto;
+    margin: 20px;
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f4f4;
   }
 
   button {
     background-color: #007bff;
     color: white;
-    border: none;
+    border: 0px;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -52,9 +49,15 @@
     max-width: 800px; /* to ensure it doesn't get too wide on large screens */
     width: 100%; /* to ensure it takes up full width up to max-width */
   }
+
+  .container {
+    flex-wrap: wrap;
+  }
 </style>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta charset="UTF-8" />
     <meta
       http-equiv="Content-Security-Policy"

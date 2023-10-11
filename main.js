@@ -22,8 +22,8 @@ let mainWindow;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 1600,
-    height: 900,
+    width: 900,
+    height: 600,
     title: "Text2Img Info Storager",
     webPreferences: {
       nodeIntegration: true,
@@ -36,7 +36,7 @@ const createWindow = () => {
     mainWindow.setTitle("Text2Img Info Storager");
   });
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 //連接到MongoDB，並初始化程式
