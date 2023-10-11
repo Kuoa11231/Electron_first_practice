@@ -6,26 +6,28 @@
     <style>
       body {
         background-color: #e4e4e4;
+        margin: 10px;
       }
+
       #imageGrid {
         padding-top: 50px;
         display: grid;
         background-color: #ffffff;
-        border-radius: 10px; /* optional: for rounded corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* optional: for a light shadow */
-        grid-template-columns: repeat(
-          5,
-          256px
-        ); /* Fix the grid to 5 columns of 256px width each */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        grid-template-columns: repeat(5, 1fr); /* Using 1fr makes it flexible */
         gap: 16px;
-        justify-content: center; /* Center the entire grid horizontally on the page */
+        justify-content: center;
+        padding: 20px; /* Added some padding for a better look */
+        box-sizing: border-box; /* Include padding in the element's total width/height */
       }
 
       .image-container {
-        width: 256px;
+        width: 100%; /* Use 100% width within the grid cell */
         height: 512px;
-        overflow: hidden; /* Ensures nothing spills out of the div */
-        position: relative; /* Allows positioning of children elements */
+        overflow: auto;
+        position: relative;
+        box-sizing: border-box; /* Include padding and border in the total width/height */
       }
 
       img {
@@ -73,7 +75,7 @@
       }
 
       .topbar {
-        margin-top: 20px;
+        margin-top: 0px;
       }
     </style>
   </head>
