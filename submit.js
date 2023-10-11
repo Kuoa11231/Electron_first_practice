@@ -1,8 +1,120 @@
 const { ipcRenderer } = require("electron");
 
+const modal = document.getElementById("presetModal");
+const btn = document.getElementById("storePreset");
+const span = document.getElementsByClassName("close-button")[0];
+const confirmButton = document.getElementById("confirmPresetName");
+const presetInput = document.getElementById("presetInput");
+
+function getValueOrDefault(elementId) {
+  const elem = document.getElementById(elementId);
+  return elem && elem.value ? elem.value : "";
+}
+
+btn.onclick = function () {
+  modal.style.display = "block";
+};
+
+span.onclick = function () {
+  modal.style.display = "none";
+};
+
+window.onclick = function (event) {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+};
+
 //切換至Preview頁面
 document.getElementById("goToPreview").addEventListener("click", () => {
   ipcRenderer.send("navigate", "preview.html");
+});
+
+//儲存Preset
+confirmButton.addEventListener("click", function () {
+  const presetName = presetInput.value;
+
+  if (!presetName) {
+    alert("Please enter a name for the preset.");
+    return;
+  }
+
+  const data = {
+    name: presetName,
+    checkpointModelName: getValueOrDefault("checkpoint-model-name"),
+    vaeModelName: getValueOrDefault("vae-model-name"),
+    samplerName: getValueOrDefault("sampler-name"),
+    samplingSteps: getValueOrDefault("sampling-steps"),
+    CFGScale: getValueOrDefault("CFG-scale"),
+    upscalerName: getValueOrDefault("upscaler-name"),
+    hiresStep: getValueOrDefault("hires-step"),
+    denoisingStrength: getValueOrDefault("denoising-strength"),
+    upscaleBy: getValueOrDefault("upscale-by"),
+  };
+
+  ipcRenderer.send("store-preset", data);
+
+  modal.style.display = "none";
+  // stopPropagation();
+  // preventDefault();
+});
+
+//使用Preset
+document.getElementById("usePreset").addEventListener("change", function () {
+  const presetName = this.value;
+  if (!presetName) return;
+
+  ipcRenderer.send("load-preset", presetName);
+});
+
+//載入Preset
+ipcRenderer.on("load-preset-data", (event, presetData) => {
+  // Populate the form fields with the returned preset data
+  document.getElementById("checkpoint-model-name").value =
+    presetData.checkpointModelName || "";
+  document.getElementById("vae-model-name").value =
+    presetData.vaeModelName || "";
+  document.getElementById("sampler-name").value = presetData.samplerName || "";
+  document.getElementById("sampling-steps").value =
+    presetData.samplingSteps || "";
+  document.getElementById("CFG-scale").value = presetData.CFGScale || "";
+  document.getElementById("upscaler-name").value =
+    presetData.upscalerName || "";
+  document.getElementById("hires-step").value = presetData.hiresStep || "";
+  document.getElementById("denoising-strength").value =
+    presetData.denoisingStrength || "";
+  document.getElementById("upscale-by").value = presetData.upscaleBy || "";
+
+  // ...continue populating other fields similarly
+});
+
+// When the page is loaded, request the preset names
+document.addEventListener("DOMContentLoaded", function () {
+  ipcRenderer.send("fetch-presets");
+});
+
+// Listen for the returned preset names and populate the dropdown
+ipcRenderer.on("send-preset-names", (event, presetNames) => {
+  const selectElement = document.getElementById("usePreset");
+  // Remove existing options
+  for (let i = selectElement.options.length - 1; i >= 1; i--) {
+    selectElement.remove(i);
+  }
+  // Add new options
+  presetNames.forEach((name) => {
+    const option = document.createElement("option");
+    option.text = name;
+    option.value = name;
+    selectElement.add(option);
+  });
+});
+
+// After successfully storing the preset:
+ipcRenderer.once("preset-stored-successfully", (event, status) => {
+  if (status) {
+    // Fetch updated presets to populate the dropdown
+    ipcRenderer.send("fetch-presets");
+  }
 });
 
 //傳遞資料至主進程

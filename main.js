@@ -4,6 +4,7 @@ require("electron-reload")(__dirname);
 const fs = require("fs");
 const { ObjectId } = require("mongodb");
 const crypto = require("crypto");
+const { dialog } = require("electron");
 const url = "mongodb://127.0.0.1:27017";
 const dbName = "local";
 
@@ -127,6 +128,41 @@ ipcMain.on("data-from-renderer", async (event, data) => {
   }
 });
 
+//儲存Presets資料到資料庫
+ipcMain.on("store-preset", async (event, data) => {
+  const collection = db.collection("preset");
+  try {
+    await collection.insertOne(data);
+    event.reply("preset-stored-successfully", true);
+  } catch (error) {
+    console.error("Error storing preset:", error);
+    event.reply("preset-stored-successfully", false);
+  }
+});
+
+//讀取Presets資料
+ipcMain.on("load-preset", async (event, presetName) => {
+  const collection = db.collection("preset");
+  try {
+    const presetData = await collection.findOne({ name: presetName });
+    event.reply("load-preset-data", presetData);
+  } catch (error) {
+    console.error("Error loading preset:", error);
+  }
+});
+
+//抓取Presets名稱
+ipcMain.on("fetch-presets", async (event) => {
+  const collection = db.collection("preset");
+  try {
+    const presets = await collection.find({}).toArray();
+    const presetNames = presets.map((preset) => preset.name);
+    event.reply("send-preset-names", presetNames);
+  } catch (error) {
+    console.error("Error fetching presets:", error);
+  }
+});
+
 //抓取圖片二進制數據轉換成為圖片
 ipcMain.on("fetch-images", async (event) => {
   console.log("fetch-images event received in main process");
@@ -167,6 +203,7 @@ ipcMain.on("load-image-details", async (event, sid) => {
   });
 });
 
+//重新抓取詳細資訊
 ipcMain.on("re-fetch-details", async (event, sid) => {
   console.log("Received re-fetch request for sid:", sid);
   const collection = db.collection("text2img_generated_info");

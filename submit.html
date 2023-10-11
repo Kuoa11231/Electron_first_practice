@@ -7,8 +7,12 @@
     height: auto;
     width: auto;
     margin: 20px;
-    font-family: "Roboto", sans-serif;
     background-color: #f4f4f4;
+  }
+
+  label {
+    font-family: "Inter";
+    font-weight: 600;
   }
 
   button {
@@ -18,7 +22,7 @@
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   button:hover {
@@ -27,9 +31,9 @@
 
   .input-group {
     display: flex;
-    align-items: center; /* vertically align items in the middle */
-    gap: 10px; /* space between items */
-    margin-bottom: 10px; /* optional: to give some space between each pair */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
   }
 
   .input-group label {
@@ -42,16 +46,50 @@
   }
 
   #combined-form {
-    background-color: white; /* optional: for a white background */
-    padding: 20px; /* optional: for some spacing inside */
-    border-radius: 10px; /* optional: for rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* optional: for a light shadow */
-    max-width: 800px; /* to ensure it doesn't get too wide on large screens */
-    width: 100%; /* to ensure it takes up full width up to max-width */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
   }
 
   .container {
     flex-wrap: wrap;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+  }
+
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close-button:hover,
+  .close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
   }
 </style>
 <html>
@@ -74,6 +112,21 @@
       <button id="goToPreview">Go to Preview</button>
 
       <h3>General Setting</h3>
+      <button type="button" id="storePreset">Store the preset</button>
+      <select id="usePreset">
+        <option value="">--Use a preset--</option>
+        <!-- Preset options will be loaded here dynamically -->
+      </select>
+
+      <div id="presetModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">×</span>
+          <p>Enter a name for the preset:</p>
+          <input type="text" id="presetInput" />
+          <button id="confirmPresetName">Confirm</button>
+        </div>
+      </div>
+
       <div class="input-group">
         <label for="image-upload">txt2img generated image:</label>
         <input type="file" id="txt2img" accept="image/*" />
@@ -91,17 +144,17 @@
         <br />
       </div>
       <div class="input-group">
-        <label for="checkpoint-model-name">Checkpoint Model Name:</label>
+        <label for="checkpoint-model-name">Checkpoint Model:</label>
         <input type="text" id="checkpoint-model-name" />
         <br />
       </div>
       <div class="input-group">
-        <label for="vae-model-name">VAE Model Name:</label>
+        <label for="vae-model-name">VAE Model:</label>
         <input type="text" id="vae-model-name" />
         <br />
       </div>
       <div class="input-group">
-        <label for="sampler-name">Sampler Name:</label>
+        <label for="sampler-name">Sampler:</label>
         <input type="text" id="sampler-name" />
         <br />
       </div>
@@ -124,7 +177,7 @@
       <!-- 第二組 -->
       <h3>Hires.fix</h3>
       <div class="input-group">
-        <label for="upscaler-name">Upscaler Name:</label>
+        <label for="upscaler-name">Upscaler:</label>
         <input type="text" id="upscaler-name" />
         <br />
       </div>
@@ -147,7 +200,7 @@
       <!-- 第三組 -->
       <h3>Lora</h3>
       <div class="input-group">
-        <label for="lora-model-name">Lora Model Name:</label>
+        <label for="lora-model-name">Lora Model:</label>
         <input type="text" id="lora-model-name" />
         <br />
       </div>
@@ -165,7 +218,7 @@
       <!-- 第四組 -->
       <h3>ControlNet</h3>
       <div class="input-group">
-        <label for="preprocessor-name">Preprocessor Name:</label>
+        <label for="preprocessor-name">Preprocessor:</label>
         <input type="text" id="preprocessor-name" />
         <br />
       </div>
