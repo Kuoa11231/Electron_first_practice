@@ -28,6 +28,7 @@
         overflow: auto;
         position: relative;
         box-sizing: border-box; /* Include padding and border in the total width/height */
+        padding-bottom: 30px; /* Space for the delete button */
       }
 
       img {
@@ -68,6 +69,10 @@
         padding: 5px 10px;
         border-radius: 5px;
         cursor: pointer;
+        position: absolute; /* Absolute position to the container */
+        bottom: 5px; /* Position from the bottom of the container */
+        right: 5px; /* Position from the right of the container */
+        z-index: 2; /* Higher layer so it appears above the image */
       }
 
       .delete-image-button:hover {
