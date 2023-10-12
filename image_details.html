@@ -96,56 +96,78 @@
       </div>
 
       <div class="details">
+        <button id="editButton">Start Editing</button>
+        <button id="completeEditButton" style="display: none">
+          Complete Editing
+        </button>
+
         <!-- General -->
         <h2>General</h2>
-        <div><strong>Pos Prompts:</strong> <span id="posPrompts"></span></div>
-        <div><strong>Neg Prompts:</strong> <span id="negPrompts"></span></div>
-        <div>
+
+        <div class="editable-field">
+          <strong>Pos Prompts:</strong> <span id="posPrompts"></span>
+        </div>
+        <div class="editable-field">
+          <strong>Neg Prompts:</strong> <span id="negPrompts"></span>
+        </div>
+        <div class="editable-field">
           <strong>Checkpoint Model Name:</strong>
           <span id="checkpointModelName"></span>
         </div>
-        <div><strong>Sampler Name:</strong> <span id="samplerName"></span></div>
-        <div>
+        <div class="editable-field">
+          <strong>Sampler Name:</strong> <span id="samplerName"></span>
+        </div>
+        <div class="editable-field">
           <strong>Sampling Steps:</strong> <span id="samplingSteps"></span>
         </div>
-        <div><strong>CFGScale:</strong> <span id="CFGScale"></span></div>
-        <div><strong>Seed:</strong> <span id="seed"></span></div>
+        <div class="editable-field">
+          <strong>CFGScale:</strong> <span id="CFGScale"></span>
+        </div>
+        <div class="editable-field">
+          <strong>Seed:</strong> <span id="seed"></span>
+        </div>
 
         <!-- 第二組 - Hires.fix -->
         <h2>Hires.fix</h2>
-        <div>
+        <div class="editable-field">
           <strong>Upscaler Name:</strong> <span id="upscalerName"></span>
         </div>
 
-        <div><strong>Hires Step:</strong> <span id="hiresStep"></span></div>
+        <div class="editable-field">
+          <strong>Hires Step:</strong> <span id="hiresStep"></span>
+        </div>
 
-        <div>
+        <div class="editable-field">
           <strong>Denoising Strength:</strong>
           <span id="denoisingStrength"></span>
         </div>
 
-        <div><strong>Upscale By:</strong> <span id="upscaleBy"></span></div>
+        <div class="editable-field">
+          <strong>Upscale By:</strong> <span id="upscaleBy"></span>
+        </div>
 
         <!-- 第三組 - Lora -->
         <h2>Lora</h2>
-        <div>
+        <div class="editable-field">
           <strong>Lora Model Name:</strong> <span id="loraModelName"></span>
         </div>
 
-        <div><strong>Weight:</strong> <span id="weight"></span></div>
+        <div class="editable-field">
+          <strong>Weight:</strong> <span id="weight"></span>
+        </div>
 
-        <div>
+        <div class="editable-field">
           <strong>Optimized Prompts:</strong> <span id="opPrompts"></span>
         </div>
 
         <!-- 第四組 - ControlNet -->
         <h2>ControlNet</h2>
-        <div>
+        <div class="editable-field">
           <strong>Preprocessor Name:</strong>
           <span id="preprocessorName"></span>
         </div>
 
-        <div>
+        <div class="editable-field">
           <strong>ControlNet Weight:</strong>
           <span id="controlNetWeight"></span>
         </div>
@@ -158,6 +180,10 @@
 
         <!-- Others -->
         <h2>Others</h2>
+        <div>
+          <strong>Sid:</strong>
+          <span id="sid" hidden></span>
+        </div>
         <div><strong>Upload Time:</strong> <span id="timestamp"></span></div>
       </div>
     </div>

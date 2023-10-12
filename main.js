@@ -223,6 +223,7 @@ ipcMain.on("re-fetch-details", async (event, sid) => {
   event.reply("send-image-details", imageDetails);
 });
 
+//在Preview頁面刪除該筆圖片資料
 ipcMain.on("delete-image", async (event, sid) => {
   const collection = db.collection("text2img_generated_info");
   try {
@@ -235,5 +236,43 @@ ipcMain.on("delete-image", async (event, sid) => {
   } catch (error) {
     console.error("Error deleting image from MongoDB:", error);
     event.reply("image-deletion-result", "fail");
+  }
+});
+
+ipcMain.on("update-data", async (event, dataToUpdate) => {
+  console.log(dataToUpdate); // Debug line
+
+  try {
+    const collection = db.collection("text2img_generated_info");
+    const query = { sid: dataToUpdate.sid };
+
+    // Remove the sid from dataToUpdate as it's used for the query, not the update.
+    delete dataToUpdate.sid;
+
+    let updateDoc = { $set: dataToUpdate };
+
+    // Remove unwanted properties from the updateDoc
+    delete updateDoc.$set[""];
+    delete updateDoc.$set["JSONFileForPose"];
+    delete updateDoc.$set["timestamp"];
+
+    console.log(updateDoc); // Debug line
+
+    if (Object.keys(updateDoc.$set).length === 0) {
+      console.error("No valid fields to update.");
+      return;
+    }
+
+    // Then proceed with the update
+    const result = await collection.updateOne(query, updateDoc);
+
+    if (result.modifiedCount === 1) {
+      event.reply("update-data-response", "Data updated successfully");
+    } else {
+      event.reply("update-data-response", "No data was updated");
+    }
+  } catch (error) {
+    console.error("Error updating data:", error);
+    event.reply("update-data-response", "Error updating data");
   }
 });
