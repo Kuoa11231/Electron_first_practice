@@ -11,6 +11,26 @@ function getValueOrDefault(elementId) {
   return elem && elem.value ? elem.value : "";
 }
 
+function showImagePreview(inputElement, targetDivId) {
+  const targetDiv = document.getElementById(targetDivId);
+  // Remove any previous image previews
+  while (targetDiv.firstChild) {
+    targetDiv.removeChild(targetDiv.firstChild);
+  }
+
+  const files = inputElement.files;
+  if (files && files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const img = document.createElement("img");
+      img.src = event.target.result;
+      img.style.width = "100%"; // or adjust as needed
+      targetDiv.appendChild(img);
+    };
+    reader.readAsDataURL(files[0]);
+  }
+}
+
 btn.onclick = function () {
   modal.style.display = "block";
 };
@@ -88,12 +108,12 @@ ipcRenderer.on("load-preset-data", (event, presetData) => {
   // ...continue populating other fields similarly
 });
 
-// When the page is loaded, request the preset names
+// 頁面重整後，再次請求Preset資料
 document.addEventListener("DOMContentLoaded", function () {
   ipcRenderer.send("fetch-presets");
 });
 
-// Listen for the returned preset names and populate the dropdown
+// 取得並顯示Preset名稱
 ipcRenderer.on("send-preset-names", (event, presetNames) => {
   const selectElement = document.getElementById("usePreset");
   // Remove existing options
@@ -109,13 +129,23 @@ ipcRenderer.on("send-preset-names", (event, presetNames) => {
   });
 });
 
-// After successfully storing the preset:
+// 儲存Preset成功後，再次請求Preset資料
 ipcRenderer.once("preset-stored-successfully", (event, status) => {
   if (status) {
     // Fetch updated presets to populate the dropdown
     ipcRenderer.send("fetch-presets");
   }
 });
+
+document.getElementById("txt2img").addEventListener("change", function () {
+  showImagePreview(this, "txt2img-preview");
+});
+
+document
+  .getElementById("preprocessor-preview")
+  .addEventListener("change", function () {
+    showImagePreview(this, "preprocessor-preview-container");
+  });
 
 //傳遞資料至主進程
 document

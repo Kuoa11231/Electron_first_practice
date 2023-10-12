@@ -30,6 +30,7 @@
   }
 
   .input-group {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -91,19 +92,38 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+  .preset-group {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  #txt2img-preview {
+    width: 256px;
+    height: 256px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #ddd; /* Optional */
+    margin-top: 10px; /* Add some space between the input and the preview */
+  }
+
+  #txt2img-preview img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 </style>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta charset="UTF-8" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
     />
   </head>
   <body>
@@ -112,11 +132,12 @@
       <button id="goToPreview">Go to Preview</button>
 
       <h3>General Setting</h3>
-      <button type="button" id="storePreset">Store the preset</button>
-      <select id="usePreset">
-        <option value="">--Use a preset--</option>
-        <!-- Preset options will be loaded here dynamically -->
-      </select>
+      <div class="preset-group">
+        <button type="button" id="storePreset">Store the preset</button>
+        <select id="usePreset">
+          <option value="">--Use a preset--</option>
+        </select>
+      </div>
 
       <div id="presetModal" class="modal">
         <div class="modal-content">
@@ -130,6 +151,7 @@
       <div class="input-group">
         <label for="image-upload">txt2img generated image:</label>
         <input type="file" id="txt2img" accept="image/*" />
+        <div id="txt2img-preview"></div>
         <br />
       </div>
 
@@ -220,6 +242,8 @@
       <div class="input-group">
         <label for="preprocessor-name">Preprocessor:</label>
         <input type="text" id="preprocessor-name" />
+        <div id="preprocessor-preview-container"></div>
+
         <br />
       </div>
       <div class="input-group">
