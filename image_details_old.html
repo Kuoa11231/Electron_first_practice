@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body {
-        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-          "Lucida Sans", sans-serif;
-        padding: 50px;
+        font-family: "Roboto", sans-serif;
+        padding-left: 50px;
+        padding-right: 50px;
         display: flex;
-        justify-content: center;
-        align-items: flex-start;
+        flex-direction: column;
+        align-items: center;
         background-color: #e4e4e4;
       }
 
       img {
-        max-width: 80%;
-        margin-left: 70px;
-        margin-right: 70px;
+        width: 70%;
+        margin-left: 120px;
       }
 
       button {
@@ -27,6 +26,7 @@
         padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
+        margin: 20px 0;
       }
 
       button:hover {
@@ -36,23 +36,26 @@
       .container {
         display: flex;
         width: 100%;
-        /* justify-content: space-between; */
       }
 
       .image {
         margin-left: 50px;
-        margin-right: 50px;
-        flex-basis: 40%;
+        margin-right: 10px;
+        padding: 20px;
+        flex-basis: 45%;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
 
       .details {
-        margin-left: 50px;
         margin-right: 50px;
-        padding-left: 50px;
-        padding-right: 50px;
+        margin-left: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 30px;
+        padding-right: 10px;
+        flex-basis: 45%;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -63,6 +66,8 @@
       }
 
       span {
+        font-family: "Roboto", sans-serif;
+        font-size: 1.25em;
         padding: 2px 4px;
         display: inline-block;
         transition: background-color 0.3s;
@@ -72,79 +77,91 @@
         cursor: pointer;
         background-color: #b8b8b8;
       }
+
+      strong {
+        font-family: "Roboto", sans-serif;
+        font-size: larger;
+      }
     </style>
   </head>
+
   <body>
-    <div class="goToPreview">
-      <button id="goToPreview">Back to Preview</button>
+    <button id="goToPreview">Back to Preview</button>
+
+    <div class="container">
+      <div class="image">
+        <h2 style="text-align: center">Images</h2>
+        <img id="text2img" src="" alt="Text2Img" />
+        <img id="preprocessorPreview" src="" alt="Preprocessor Preview" />
+      </div>
+
+      <div class="details">
+        <!-- General -->
+        <h2>General</h2>
+        <div><strong>Pos Prompts:</strong> <span id="posPrompts"></span></div>
+        <div><strong>Neg Prompts:</strong> <span id="negPrompts"></span></div>
+        <div>
+          <strong>Checkpoint Model Name:</strong>
+          <span id="checkpointModelName"></span>
+        </div>
+        <div><strong>Sampler Name:</strong> <span id="samplerName"></span></div>
+        <div>
+          <strong>Sampling Steps:</strong> <span id="samplingSteps"></span>
+        </div>
+        <div><strong>CFGScale:</strong> <span id="CFGScale"></span></div>
+        <div><strong>Seed:</strong> <span id="seed"></span></div>
+
+        <!-- 第二組 - Hires.fix -->
+        <h2>Hires.fix</h2>
+        <div>
+          <strong>Upscaler Name:</strong> <span id="upscalerName"></span>
+        </div>
+
+        <div><strong>Hires Step:</strong> <span id="hiresStep"></span></div>
+
+        <div>
+          <strong>Denoising Strength:</strong>
+          <span id="denoisingStrength"></span>
+        </div>
+
+        <div><strong>Upscale By:</strong> <span id="upscaleBy"></span></div>
+
+        <!-- 第三組 - Lora -->
+        <h2>Lora</h2>
+        <div>
+          <strong>Lora Model Name:</strong> <span id="loraModelName"></span>
+        </div>
+
+        <div><strong>Weight:</strong> <span id="weight"></span></div>
+
+        <div>
+          <strong>Optimized Prompts:</strong> <span id="opPrompts"></span>
+        </div>
+
+        <!-- 第四組 - ControlNet -->
+        <h2>ControlNet</h2>
+        <div>
+          <strong>Preprocessor Name:</strong>
+          <span id="preprocessorName"></span>
+        </div>
+
+        <div>
+          <strong>ControlNet Weight:</strong>
+          <span id="controlNetWeight"></span>
+        </div>
+
+        <div>
+          <strong>JSON File For Pose:</strong>
+          <span id="JSONFileForPose"></span>
+          <button id="downloadJSON">Download JSON</button>
+        </div>
+
+        <!-- Others -->
+        <h2>Others</h2>
+        <div><strong>Upload Time:</strong> <span id="timestamp"></span></div>
+      </div>
     </div>
 
-    <div class="image">
-      <h2 style="text-align: center">Images</h2>
-      <img id="text2img" src="" alt="Text2Img" />
-      <img id="preprocessorPreview" src="" alt="Preprocessor Preview" />
-    </div>
-
-    <div class="details">
-      <!-- General -->
-      <h2 style="text-align: center">General</h2>
-      <div><strong>Pos Prompts:</strong> <span id="posPrompts"></span></div>
-      <div><strong>Neg Prompts:</strong> <span id="negPrompts"></span></div>
-      <div>
-        <strong>Checkpoint Model Name:</strong>
-        <span id="checkpointModelName"></span>
-      </div>
-      <div><strong>Sampler Name:</strong> <span id="samplerName"></span></div>
-      <div>
-        <strong>Sampling Steps:</strong> <span id="samplingSteps"></span>
-      </div>
-      <div><strong>CFGScale:</strong> <span id="CFGScale"></span></div>
-      <div><strong>Seed:</strong> <span id="seed"></span></div>
-
-      <!-- 第二組 - Hires.fix -->
-      <h2 style="text-align: center">Hires.fix</h2>
-      <div><strong>Upscaler Name:</strong> <span id="upscalerName"></span></div>
-
-      <div><strong>Hires Step:</strong> <span id="hiresStep"></span></div>
-
-      <div>
-        <strong>Denoising Strength:</strong>
-        <span id="denoisingStrength"></span>
-      </div>
-
-      <div><strong>Upscale By:</strong> <span id="upscaleBy"></span></div>
-
-      <!-- 第三組 - Lora -->
-      <h2 style="text-align: center">Lora</h2>
-      <div>
-        <strong>Lora Model Name:</strong> <span id="loraModelName"></span>
-      </div>
-
-      <div><strong>Weight:</strong> <span id="weight"></span></div>
-
-      <div>
-        <strong>Optimized Prompts:</strong> <span id="opPrompts"></span>
-      </div>
-
-      <!-- 第四組 - ControlNet -->
-      <h2 style="text-align: center">ControlNet</h2>
-      <div>
-        <strong>Preprocessor Name:</strong> <span id="preprocessorName"></span>
-      </div>
-
-      <div>
-        <strong>ControlNet Weight:</strong> <span id="controlNetWeight"></span>
-      </div>
-
-      <div>
-        <strong>JSON File For Pose:</strong> <span id="JSONFileForPose"></span>
-        <button id="downloadJSON">Download JSON</button>
-      </div>
-
-      <!-- Others -->
-      <h2 style="text-align: center">Others</h2>
-      <div><strong>Upload Time:</strong> <span id="timestamp"></span></div>
-    </div>
+    <script src="image_details.js"></script>
   </body>
-  <script src="image_details.js"></script>
 </html>

@@ -1,6 +1,95 @@
 const { ipcRenderer } = require("electron");
 const { remote } = require("electron");
 
+const editableFields = [
+  "posPrompts",
+  "negPrompts",
+  "checkpointModelName",
+  "samplerName",
+  "samplingSteps",
+  "CFGScale",
+  "seed",
+  "upscalerName",
+  "hiresStep",
+  "denoisingStrength",
+  "upscaleBy",
+  "loraModelName",
+  "weight",
+  "opPrompts",
+  "preprocessorName",
+  "controlNetWeight",
+];
+
+const editButton = document.getElementById("editButton");
+const completeEditButton = document.getElementById("completeEditButton");
+
+editButton.addEventListener("click", function () {
+  // Switch all spans in editable fields to input fields with the span's text
+  document.querySelectorAll(".editable-field span").forEach((span) => {
+    const inputValue = span.innerText;
+    const inputField = document.createElement("input");
+    inputField.value = inputValue;
+    inputField.id = span.id; // Transfer the ID from span to input
+    span.parentElement.replaceChild(inputField, span);
+  });
+
+  // Hide the edit button and show the complete edit button
+  editButton.style.display = "none";
+  completeEditButton.style.display = "block";
+});
+
+completeEditButton.addEventListener("click", function () {
+  // Switch all inputs in editable fields back to spans
+  document.querySelectorAll(".editable-field input").forEach((input) => {
+    const spanValue = input.value;
+    const spanElement = document.createElement("span");
+    spanElement.innerText = spanValue;
+    spanElement.id = input.id; // Transfer the ID from input back to span
+    input.parentElement.replaceChild(spanElement, input);
+  });
+
+  // Reverse the button display settings
+  editButton.style.display = "block";
+  completeEditButton.style.display = "none";
+
+  const dataToUpdate = {
+    sid: document.getElementById("sid").textContent,
+  };
+
+  // Add this logging for debugging
+  console.log("DEBUG: Checking field values:");
+  editableFields.forEach((field) => {
+    const fieldElement = document.getElementById(field);
+
+    // Check if the element exists
+    if (fieldElement) {
+      const fieldValue = fieldElement.textContent; // Use textContent for span
+
+      // Only add properties if they have value and are not 'sid', 'JSONFileForPose', or 'timestamp'
+      if (
+        fieldValue &&
+        !["sid", "JSONFileForPose", "timestamp"].includes(field)
+      ) {
+        dataToUpdate[field] = fieldValue;
+      }
+
+      // Log the field value
+      console.log(field, fieldValue);
+    } else {
+      console.warn(`Element with ID ${field} not found.`);
+    }
+  });
+
+  // Sending data to main process
+  console.log(dataToUpdate);
+  ipcRenderer.send("update-data", dataToUpdate);
+});
+
+//回應修改資料結果
+ipcRenderer.on("update-data-response", (event, message) => {
+  alert(message);
+});
+
 document.getElementById("goToPreview").addEventListener("click", () => {
   ipcRenderer.send("navigate", "preview.html");
 });
@@ -66,6 +155,7 @@ ipcRenderer.on("send-image-details", (event, imageDetails) => {
   }
 
   // General
+  document.getElementById("sid").textContent = imageDetails.sid;
   document.getElementById("posPrompts").textContent =
     imageDetails.posPrompts.join(", ");
   document.getElementById("negPrompts").textContent =
