@@ -1,9 +1,11 @@
-const { contextBridge } = require("electron");
-const { contextBridge, ipcRenderer } = require("electron");
+const { session } = require("electron");
 
-contextBridge.exposeInMainWorld("versions", {
-  node: () => process.versions.node,
-  chrome: () => process.versions.chrome,
-  electron: () => process.versions.electron,
-  ping: () => ipcRenderer.invoke("ping"),
+// Allow loading of local file
+session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+  callback({
+    responseHeaders: {
+      ...details.responseHeaders,
+      "Content-Security-Policy": ["default-src 'self' data:"],
+    },
+  });
 });

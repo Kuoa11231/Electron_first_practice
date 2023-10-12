@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, session } = require("electron");
 const { MongoClient } = require("mongodb");
 require("electron-reload")(__dirname);
 const fs = require("fs");
@@ -29,6 +29,8 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      contentSecurityPolicy:
+        "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'",
     },
   });
 
@@ -46,6 +48,7 @@ const initApp = async () => {
     const client = await MongoClient.connect(url, { useUnifiedTopology: true });
     console.log("Connected successfully to MongoDB server");
     db = client.db(dbName);
+
     createWindow();
   } catch (err) {
     console.error("Failed to connect to MongoDB:", err);
