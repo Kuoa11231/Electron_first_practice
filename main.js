@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, session } = require("electron");
+const { Binary } = require("mongodb");
 const { MongoClient } = require("mongodb");
 require("electron-reload")(__dirname);
 const fs = require("fs");
@@ -239,6 +240,7 @@ ipcMain.on("delete-image", async (event, sid) => {
   }
 });
 
+//更新圖片資料
 ipcMain.on("update-data", async (event, dataToUpdate) => {
   console.log(dataToUpdate); // Debug line
 
@@ -248,6 +250,19 @@ ipcMain.on("update-data", async (event, dataToUpdate) => {
 
     // Remove the sid from dataToUpdate as it's used for the query, not the update.
     delete dataToUpdate.sid;
+
+    if (dataToUpdate.txt2imgBuffer) {
+      const base64Image = dataToUpdate.txt2imgBuffer.toString("base64");
+      dataToUpdate.txt2img = Binary.createFromBase64(base64Image);
+      delete dataToUpdate.txt2imgBuffer;
+    }
+
+    if (dataToUpdate.preprocessorPreviewBuffer) {
+      const base64Image =
+        dataToUpdate.preprocessorPreviewBuffer.toString("base64");
+      dataToUpdate.preprocessorPreview = Binary.createFromBase64(base64Image);
+      delete dataToUpdate.preprocessorPreviewBuffer; // Delete buffer from object
+    }
 
     let updateDoc = { $set: dataToUpdate };
 
