@@ -36,8 +36,40 @@ editButton.addEventListener("click", function () {
   // Hide the edit button and show the complete edit button
   editButton.style.display = "none";
   completeEditButton.style.display = "block";
+  // Display the upload buttons
+  document.getElementById("text2img-upload").style.display = "block";
+  document.getElementById("preprocessor-upload").style.display = "block";
 });
 
+let text2imgBuffer;
+let preprocessorPreviewBuffer;
+
+document
+  .getElementById("text2img-upload")
+  .addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      text2imgBuffer = e.target.result; // Store the buffer here
+      document.getElementById("text2img").src = URL.createObjectURL(file);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+
+document
+  .getElementById("preprocessor-upload")
+  .addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      preprocessorPreviewBuffer = e.target.result; // Store the buffer here
+      document.getElementById("preprocessorPreview").src =
+        URL.createObjectURL(file);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+
+//按下後將修改過的欄位傳回主進程
 completeEditButton.addEventListener("click", function () {
   // Switch all inputs in editable fields back to spans
   document.querySelectorAll(".editable-field input").forEach((input) => {
@@ -52,9 +84,22 @@ completeEditButton.addEventListener("click", function () {
   editButton.style.display = "block";
   completeEditButton.style.display = "none";
 
+  const text2imgFile = document.getElementById("text2img-upload").files[0];
+  const preprocessorFile = document.getElementById("preprocessor-upload")
+    .files[0];
+
   const dataToUpdate = {
     sid: document.getElementById("sid").textContent,
   };
+
+  if (text2imgBuffer) {
+    dataToUpdate.txt2img = new Uint8Array(text2imgBuffer); // Change "text2img" to "txt2img" here
+  }
+  if (preprocessorPreviewBuffer) {
+    dataToUpdate.preprocessorPreview = new Uint8Array(
+      preprocessorPreviewBuffer
+    ); // Use the buffer directly here
+  }
 
   editableFields.forEach((field) => {
     const fieldElement = document.getElementById(field);
