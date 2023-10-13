@@ -56,32 +56,54 @@ completeEditButton.addEventListener("click", function () {
     sid: document.getElementById("sid").textContent,
   };
 
-  // Add this logging for debugging
-  console.log("DEBUG: Checking field values:");
   editableFields.forEach((field) => {
     const fieldElement = document.getElementById(field);
 
     // Check if the element exists
     if (fieldElement) {
-      const fieldValue = fieldElement.textContent; // Use textContent for span
+      let fieldValue = fieldElement.textContent; // Use textContent for span
+
+      // Convert the value based on its expected data type
+      switch (field) {
+        case "posPrompts":
+        case "negPrompts":
+        case "opPrompts":
+          fieldValue = fieldValue.split(",").map((item) => item.trim());
+          break;
+
+        case "samplingSteps":
+        case "seed":
+        case "hiresStep":
+          fieldValue = parseInt(fieldValue);
+          break;
+
+        case "CFGScale":
+        case "denoisingStrength":
+        case "upscaleBy":
+        case "weight":
+        case "controlNetWeight":
+          fieldValue = parseFloat(fieldValue);
+          break;
+
+        // For other fields, use the string value as-is
+        default:
+          break;
+      }
 
       // Only add properties if they have value and are not 'sid', 'JSONFileForPose', or 'timestamp'
       if (
-        fieldValue &&
+        fieldValue !== undefined &&
         !["sid", "JSONFileForPose", "timestamp"].includes(field)
       ) {
         dataToUpdate[field] = fieldValue;
       }
-
-      // Log the field value
-      console.log(field, fieldValue);
     } else {
       console.warn(`Element with ID ${field} not found.`);
     }
   });
 
   // Sending data to main process
-  console.log(dataToUpdate);
+  console.log("Preparing to send updated data:", dataToUpdate);
   ipcRenderer.send("update-data", dataToUpdate);
 });
 
@@ -124,13 +146,13 @@ function copyToClipboard(text) {
 // Listen for the image details from the main process
 ipcRenderer.on("send-image-details", (event, imageDetails) => {
   ipcRenderer.send("set-current-sid", imageDetails.sid);
+  console.log("Received image details:", imageDetails);
 
   if (!imageDetails || !imageDetails.txt2img) {
     console.error("Invalid imageDetails received in renderer:", imageDetails);
     return;
   }
   // Populate images
-  console.log(imageDetails.txt2img);
   let txt2imgData = imageDetails.txt2img.buffer;
   if (txt2imgData instanceof Uint8Array) {
     txt2imgData = Buffer.from(txt2imgData);
@@ -156,10 +178,30 @@ ipcRenderer.on("send-image-details", (event, imageDetails) => {
 
   // General
   document.getElementById("sid").textContent = imageDetails.sid;
-  document.getElementById("posPrompts").textContent =
-    imageDetails.posPrompts.join(", ");
-  document.getElementById("negPrompts").textContent =
-    imageDetails.negPrompts.join(", ");
+  // For posPrompts:
+  if (Array.isArray(imageDetails.posPrompts)) {
+    document.getElementById("posPrompts").textContent =
+      imageDetails.posPrompts.join(", ");
+  } else {
+    console.warn(
+      "Expected posPrompts to be an array, but got:",
+      imageDetails.posPrompts
+    );
+    document.getElementById("posPrompts").textContent = imageDetails.posPrompts;
+  }
+
+  // For negPrompts:
+  if (Array.isArray(imageDetails.negPrompts)) {
+    document.getElementById("negPrompts").textContent =
+      imageDetails.negPrompts.join(", ");
+  } else {
+    console.warn(
+      "Expected negPrompts to be an array, but got:",
+      imageDetails.negPrompts
+    );
+    document.getElementById("negPrompts").textContent = imageDetails.negPrompts;
+  }
+
   document.getElementById("checkpointModelName").textContent =
     imageDetails.checkpointModelName;
   document.getElementById("samplerName").textContent = imageDetails.samplerName;
