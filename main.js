@@ -264,16 +264,15 @@ ipcMain.on("update-data", async (event, dataToUpdate) => {
       delete dataToUpdate.preprocessorPreviewBuffer; // Delete buffer from object
     }
 
-    if (dataToUpdate.JSONFileForPose) {
-      const jsonData = JSON.parse(dataToUpdate.JSONFileForPose);
-      dataToUpdate.JSONFileForPose = jsonData;
-    }
+    // if (dataToUpdate.JSONFileForPose) {
+    //   dataToUpdate.JSONFileForPose = dataToUpdate.JSONFileForPose;
+    // }
 
     let updateDoc = { $set: dataToUpdate };
 
     // Remove unwanted properties from the updateDoc
     delete updateDoc.$set[""];
-    delete updateDoc.$set["JSONFileForPose"];
+    // delete updateDoc.$set["JSONFileForPose"];
     delete updateDoc.$set["timestamp"];
 
     console.log(updateDoc); // Debug line
