@@ -20,6 +20,8 @@ const editableFields = [
   "controlNetWeight",
 ];
 
+const dataToUpdate = {};
+
 const editButton = document.getElementById("editButton");
 const completeEditButton = document.getElementById("completeEditButton");
 
@@ -39,6 +41,7 @@ editButton.addEventListener("click", function () {
   // Display the upload buttons
   document.getElementById("text2img-upload").style.display = "block";
   document.getElementById("preprocessor-upload").style.display = "block";
+  document.getElementById("JSON-upload").style.display = "block";
 });
 
 let text2imgBuffer;
@@ -69,6 +72,26 @@ document
     reader.readAsArrayBuffer(file);
   });
 
+document
+  .getElementById("JSON-upload")
+  .addEventListener("change", function (event) {
+    const file = event.target.files[0];
+
+    if (!file) return; // Exit if no file is selected
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        dataToUpdate.JSONFileForPose = JSON.parse(e.target.result);
+        // Add any other logic you'd like to handle after reading and parsing the file
+      } catch (error) {
+        console.error("Error parsing JSON file:", error);
+        // Handle this error in a user-friendly way if necessary
+      }
+    };
+    reader.readAsText(file);
+  });
+
 //按下後將修改過的欄位傳回主進程
 completeEditButton.addEventListener("click", function () {
   // Switch all inputs in editable fields back to spans
@@ -83,14 +106,11 @@ completeEditButton.addEventListener("click", function () {
   // Reverse the button display settings
   editButton.style.display = "block";
   completeEditButton.style.display = "none";
+  document.getElementById("text2img-upload").style.display = "none";
+  document.getElementById("preprocessor-upload").style.display = "none";
+  document.getElementById("JSON-upload").style.display = "none";
 
-  const text2imgFile = document.getElementById("text2img-upload").files[0];
-  const preprocessorFile = document.getElementById("preprocessor-upload")
-    .files[0];
-
-  const dataToUpdate = {
-    sid: document.getElementById("sid").textContent,
-  };
+  dataToUpdate.sid = document.getElementById("sid").textContent;
 
   if (text2imgBuffer) {
     dataToUpdate.txt2img = new Uint8Array(text2imgBuffer); // Change "text2img" to "txt2img" here
@@ -99,6 +119,13 @@ completeEditButton.addEventListener("click", function () {
     dataToUpdate.preprocessorPreview = new Uint8Array(
       preprocessorPreviewBuffer
     ); // Use the buffer directly here
+  }
+
+  if (dataToUpdate.JSONFileForPoseBuffer) {
+    dataToUpdate.JSONFileForPose = JSON.parse(
+      dataToUpdate.JSONFileForPoseBuffer
+    );
+    delete dataToUpdate.JSONFileForPoseBuffer;
   }
 
   editableFields.forEach((field) => {
@@ -135,11 +162,8 @@ completeEditButton.addEventListener("click", function () {
           break;
       }
 
-      // Only add properties if they have value and are not 'sid', 'JSONFileForPose', or 'timestamp'
-      if (
-        fieldValue !== undefined &&
-        !["sid", "JSONFileForPose", "timestamp"].includes(field)
-      ) {
+      // Only add properties if they have value and are not 'sid', or 'timestamp'
+      if (fieldValue !== undefined && !["sid", "timestamp"].includes(field)) {
         dataToUpdate[field] = fieldValue;
       }
     } else {
