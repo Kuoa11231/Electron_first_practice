@@ -26,6 +26,26 @@ document.getElementById("sortByOldest").addEventListener("click", function () {
   fetchImagesByOrder("oldest");
 });
 
+document.getElementById("searchButton").addEventListener("click", function () {
+  const searchField = document.getElementById("searchField").value;
+  const keyword = document.getElementById("searchKeyword").value;
+
+  // Check if keyword is empty
+  if (!keyword.trim()) {
+    alert("Please enter a keyword for searching.");
+    return;
+  }
+
+  // Send search request to main process
+  ipcRenderer.send("search-images", { field: searchField, keyword });
+});
+
+document.getElementById("resetButton").addEventListener("click", function () {
+  document.getElementById("searchKeyword").value = "";
+  document.getElementById("searchField").value = "posPrompts";
+  fetchImagesByOrder("newest");
+});
+
 //進入或重整頁面時請求載入圖片
 // ipcRenderer.send("fetch-images");
 document.addEventListener("DOMContentLoaded", () => {
@@ -34,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //於Image Grid載入圖片預覽
 ipcRenderer.on("send-images", (event, imagesDocuments) => {
+  clearImageGrid();
   console.log(`Received ${imagesDocuments.length} images from main process.`);
   const imageGrid = document.getElementById("imageGrid");
   imagesDocuments.forEach((imageDocument) => {

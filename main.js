@@ -187,6 +187,30 @@ ipcMain.on("fetch-images", async (event, sortOrder) => {
   }
 });
 
+//以指定欄位搜尋圖片
+ipcMain.on("search-images", async (event, { field, keyword }) => {
+  console.log(`Searching images by ${field} for keyword: ${keyword}`);
+  const collection = db.collection("text2img_generated_info");
+
+  let query = {};
+
+  // If field is 'posPrompts', we want to check if the keyword exists in the array
+  if (field === "posPrompts") {
+    query[field] = keyword;
+  } else {
+    // For string fields, use a regex match for flexibility
+    query[field] = new RegExp(keyword, "i");
+  }
+
+  try {
+    const images = await collection.find(query).toArray();
+    event.reply("send-images", images);
+  } catch (error) {
+    console.error("Error searching images from MongoDB:", error);
+    event.reply("send-images", []);
+  }
+});
+
 //儲存圖片ID至全域變數
 ipcMain.on("set-current-sid", (event, sid) => {
   global.currentSid = sid;
