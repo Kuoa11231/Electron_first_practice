@@ -167,18 +167,27 @@ ipcMain.on("fetch-presets", async (event) => {
   }
 });
 
-//抓取圖片二進制數據轉換成為圖片
-ipcMain.on("fetch-images", async (event) => {
-  console.log("fetch-images event received in main process");
+//抓取圖片二進制數據轉換為圖片並排序
+ipcMain.on("fetch-images", async (event, sortOrder) => {
+  console.log(
+    "fetch-images event received in main process with sortOrder:",
+    sortOrder
+  );
   const collection = db.collection("text2img_generated_info");
+
+  const sortOption =
+    sortOrder === "newest" ? { timestamp: -1 } : { timestamp: 1 };
+
   try {
-    const images = await collection.find({}).toArray();
+    console.log("Sort Option:", sortOption);
+    const images = await collection.find({}).sort(sortOption).toArray();
     event.reply("send-images", images);
   } catch (error) {
     console.error("Error fetching images from MongoDB:", error);
   }
 });
 
+//儲存圖片ID至全域變數
 ipcMain.on("set-current-sid", (event, sid) => {
   global.currentSid = sid;
 });
@@ -263,10 +272,6 @@ ipcMain.on("update-data", async (event, dataToUpdate) => {
       dataToUpdate.preprocessorPreview = Binary.createFromBase64(base64Image);
       delete dataToUpdate.preprocessorPreviewBuffer; // Delete buffer from object
     }
-
-    // if (dataToUpdate.JSONFileForPose) {
-    //   dataToUpdate.JSONFileForPose = dataToUpdate.JSONFileForPose;
-    // }
 
     let updateDoc = { $set: dataToUpdate };
 
