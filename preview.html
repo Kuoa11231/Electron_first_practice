@@ -90,6 +90,27 @@
 
       <h1 style="text-align: center; margin-top: 0px">Image Preview</h1>
     </div>
+    <!-- Sorting Section -->
+    <div class="sorting-section">
+      <label>
+        <input type="radio" name="sort" id="sortByNewest" checked /> Newest
+      </label>
+      <label>
+        <input type="radio" name="sort" id="sortByOldest" /> Oldest
+      </label>
+    </div>
+
+    <!-- Search Functionality -->
+    <div class="search-section">
+      <select id="searchField">
+        <option value="posPrompts">Positive Prompts</option>
+        <option value="checkpointModelName">Checkpoint Model Name</option>
+        <option value="loraModelName">Lora Model Name</option>
+      </select>
+      <input type="text" id="searchKeyword" placeholder="Enter keyword..." />
+      <button id="searchButton">Search</button>
+    </div>
+
     <div id="imageGrid"></div>
   </body>
   <script src="./preview.js"></script>
