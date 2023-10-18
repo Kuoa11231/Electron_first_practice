@@ -131,4 +131,6 @@ dist
 
 # Executable files
 /out/
+/Text2Img_Info_Storager-linux-x64/
+/Text2Img_Info_Storager-win32-x64/
 
