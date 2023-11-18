@@ -241,11 +241,24 @@
       <h3>ControlNet</h3>
       <div class="input-group">
         <label for="preprocessor-name">Preprocessor:</label>
-        <input type="text" id="preprocessor-name" />
+        <select id="preprocessor-name">
+          <option value="Canny">Canny</option>
+          <option value="Depth">Depth</option>
+          <option value="Normal">Normal</option>
+          <option value="Openpose">Openpose</option>
+          <option value="MLSD">MLSD</option>
+          <option value="Lineart">Lineart</option>
+          <option value="SoftEdge">SoftEdge</option>
+          <option value="Scribble">Scribble</option>
+          <option value="Seg">Seg</option>
+          <option value="Shuffle">Shuffle</option>
+          <option value="Tile">Tile</option>
+          <option value="Inpaint">Inpaint</option>
+        </select>
         <div id="preprocessor-preview-container"></div>
-
         <br />
       </div>
+
       <div class="input-group">
         <label for="ControlNet-weight">ControlNet weight:</label>
         <input type="text" id="ControlNet-weight" />

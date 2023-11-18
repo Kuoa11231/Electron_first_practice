@@ -195,7 +195,7 @@ document
       opPrompts: form["op-prompts"].value.split(",").map((item) => item.trim()),
 
       // 第四組 - ControlNet
-      preprocessorName: form["preprocessor-name"].value,
+      preprocessorName: document.getElementById("preprocessor-name").value,
       controlNetWeight: parseFloat(form["ControlNet-weight"].value),
       preprocessorPreview: getPathIfExists("preprocessor-preview"),
       JSONFileForPose: getPathIfExists("JSON-file-for-pose"),
