@@ -39,7 +39,10 @@ const createWindow = () => {
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.setTitle("Text2Img Info Storager");
   });
+  // Expose Electron to the renderer process
+  global.electron = require("electron");
 
+  //打開程式後自動開啟Devtools
   // mainWindow.webContents.openDevTools();
 };
 

@@ -92,7 +92,7 @@ document
     reader.readAsText(file);
   });
 
-//按下後將修改過的欄位傳回主進程
+//將修改過的欄位傳回主進程
 completeEditButton.addEventListener("click", function () {
   // Switch all inputs in editable fields back to spans
   document.querySelectorAll(".editable-field input").forEach((input) => {
@@ -179,18 +179,25 @@ completeEditButton.addEventListener("click", function () {
 //回應修改資料結果
 ipcRenderer.on("update-data-response", (event, message) => {
   alert(message);
+  // // After an update, fetch and populate the updated image details
+  // fetchImageDetails();
 });
 
 document.getElementById("goToPreview").addEventListener("click", () => {
   ipcRenderer.send("navigate", "preview.html");
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const storedSid = window.electron.getGlobal("currentSid");
+// Define a function to fetch and populate image details
+function fetchImageDetails() {
+  const storedSid = window.electron.remote.getGlobal("currentSid");
   if (storedSid) {
     ipcRenderer.send("re-fetch-details", storedSid);
     console.log("Requesting re-fetch of details for sid:", storedSid);
   }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // fetchImageDetails();
 });
 
 //左鍵點擊span時，拷貝其內容到剪貼版

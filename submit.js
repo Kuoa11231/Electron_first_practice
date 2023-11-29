@@ -47,6 +47,11 @@ window.onclick = function (event) {
 
 //切換至Preview頁面
 document.getElementById("goToPreview").addEventListener("click", () => {
+  // Prevent the default form submission behavior
+  event.preventDefault();
+
+  // Disable the button to prevent multiple submissions
+  this.disabled = true;
   ipcRenderer.send("navigate", "preview.html");
 });
 
