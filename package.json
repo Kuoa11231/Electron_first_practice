@@ -28,6 +28,7 @@
     "electron-packager": "^17.1.2"
   },
   "dependencies": {
+    "archiver": "^6.0.1",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
     "mongoose": "^7.5.3",

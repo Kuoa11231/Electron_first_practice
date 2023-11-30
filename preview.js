@@ -46,6 +46,12 @@ document.getElementById("resetButton").addEventListener("click", function () {
   fetchImagesByOrder("newest");
 });
 
+document
+  .getElementById("downloadAllButton")
+  .addEventListener("click", function () {
+    ipcRenderer.send("download-all-images");
+  });
+
 //進入或重整頁面時請求載入圖片
 // ipcRenderer.send("fetch-images");
 document.addEventListener("DOMContentLoaded", () => {
