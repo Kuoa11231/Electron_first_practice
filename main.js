@@ -8,6 +8,8 @@ const crypto = require("crypto");
 const { dialog } = require("electron");
 const url = "mongodb://127.0.0.1:27017";
 const dbName = "local";
+const archiver = require("archiver");
+const path = require("path");
 
 function generateHashSID() {
   // Create a random set of bytes
@@ -24,8 +26,8 @@ let mainWindow;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 600,
+    width: 1200,
+    height: 800,
     title: "Text2Img Info Storager",
     webPreferences: {
       nodeIntegration: true,
@@ -39,8 +41,6 @@ const createWindow = () => {
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.setTitle("Text2Img Info Storager");
   });
-  // Expose Electron to the renderer process
-  global.electron = require("electron");
 
   //打開程式後自動開啟Devtools
   // mainWindow.webContents.openDevTools();
@@ -213,6 +213,65 @@ ipcMain.on("search-images", async (event, { field, keyword }) => {
     event.reply("send-images", []);
   }
 });
+
+ipcMain.on("download-all-images", async (event) => {
+  console.log("Download all images event received in main process");
+
+  // Prompt the user to choose the download location
+  const dialogResult = await dialog.showSaveDialog(mainWindow, {
+    defaultPath: `text2img_images_${getCurrentDate()}.zip`,
+    filters: [{ name: "Zip Files", extensions: ["zip"] }],
+  });
+
+  if (dialogResult.canceled) {
+    console.log("User canceled the download.");
+    return;
+  }
+
+  const outputDir = dialogResult.filePath;
+  const collection = db.collection("text2img_generated_info");
+
+  try {
+    const images = await collection.find({}).toArray();
+    downloadAllImages(images, outputDir);
+  } catch (error) {
+    console.error("Error fetching images from MongoDB:", error);
+  }
+});
+
+function downloadAllImages(images, outputDir) {
+  const output = fs.createWriteStream(outputDir);
+  const archive = archiver("zip");
+
+  output.on("close", () => {
+    console.log("All images have been added to the zip file.");
+    dialog.showMessageBox({
+      type: "info",
+      title: "Download Complete",
+      message: "All images have been downloaded as a zip file.",
+      buttons: ["OK"],
+    });
+  });
+
+  archive.pipe(output);
+
+  images.forEach((image, index) => {
+    if (image.txt2img) {
+      const imageBuffer = Buffer.from(image.txt2img.buffer);
+      archive.append(imageBuffer, { name: `image_${index}.jpg` });
+    }
+  });
+
+  archive.finalize();
+}
+
+function getCurrentDate() {
+  const now = new Date();
+  const year = now.getFullYear().toString().slice(-2);
+  const month = (now.getMonth() + 1).toString().padStart(2, "0");
+  const day = now.getDate().toString().padStart(2, "0");
+  return `${year}${month}${day}`;
+}
 
 //儲存圖片ID至全域變數
 ipcMain.on("set-current-sid", (event, sid) => {
