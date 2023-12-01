@@ -92,7 +92,7 @@ document.getElementById("usePreset").addEventListener("change", function () {
   ipcRenderer.send("load-preset", presetName);
 });
 
-//載入Preset
+// Load preset data
 ipcRenderer.on("load-preset-data", (event, presetData) => {
   // Populate the form fields with the returned preset data
   document.getElementById("checkpoint-model-name").value =
@@ -110,7 +110,16 @@ ipcRenderer.on("load-preset-data", (event, presetData) => {
     presetData.denoisingStrength || "";
   document.getElementById("upscale-by").value = presetData.upscaleBy || "";
 
-  // ...continue populating other fields similarly
+  // Trigger the input event to update slider values
+  document.getElementById("sampling-steps").dispatchEvent(new Event("input"));
+  document.getElementById("CFG-scale").dispatchEvent(new Event("input"));
+  document.getElementById("hires-step").dispatchEvent(new Event("input"));
+  document
+    .getElementById("denoising-strength")
+    .dispatchEvent(new Event("input"));
+  document.getElementById("upscale-by").dispatchEvent(new Event("input"));
+
+  // ...continue triggering other input events for other sliders
 });
 
 // 頁面重整後，再次請求Preset資料
@@ -152,11 +161,60 @@ document
     showImagePreview(this, "preprocessor-preview-container");
   });
 
+// Add event listeners for sliders
+const sliders = document.querySelectorAll("input[type='range']");
+sliders.forEach((slider) => {
+  const output = document.getElementById(`${slider.id}-value`);
+  output.textContent = slider.value;
+
+  slider.addEventListener("input", function () {
+    output.textContent = this.value;
+  });
+});
+
+// Function to show a custom notification modal
+function showNotification(message) {
+  const notificationModal = document.getElementById("notificationModal");
+  const notificationMessage = document.getElementById("notificationMessage");
+  notificationMessage.textContent = message;
+  notificationModal.style.display = "block";
+  setTimeout(() => {
+    notificationModal.style.display = "none";
+  }, 2000);
+}
+
 //傳遞資料至主進程
 document
   .getElementById("combined-form")
   .addEventListener("submit", function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
+
+    // Check if the "txt2img" input has any selected files
+    const txt2imgInput = document.getElementById("txt2img");
+    if (!txt2imgInput.files.length) {
+      showNotification("Please select a txt2img generated image.");
+      return;
+    }
+
+    // Check for other required fields
+    const requiredFields = [
+      "pos-prompts",
+      "neg-prompts",
+      "checkpoint-model-name",
+      "sampler-name",
+      "sampling-steps",
+      "CFG-scale",
+      "seed",
+    ];
+
+    for (const fieldName of requiredFields) {
+      const fieldValue = document.getElementById(fieldName).value.trim();
+      if (!fieldValue) {
+        showNotification(`Please fill in the required field: ${fieldName}`);
+
+        return;
+      }
+    }
 
     const form = document.getElementById("combined-form");
 
