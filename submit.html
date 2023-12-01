@@ -116,6 +116,26 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+
+  /* Add this to your CSS styles */
+  #notificationModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  #notificationMessage {
+    font-size: 18px; /* Adjust the font size as needed */
+    font-weight: bold;
+    color: red;
+  }
 </style>
 <html>
   <head>
@@ -182,13 +202,29 @@
       </div>
       <div class="input-group">
         <label for="sampling-steps">Sampling Steps:</label>
-        <input type="text" id="sampling-steps" />
-        <br />
+        <input
+          type="range"
+          id="sampling-steps"
+          name="sampling-steps"
+          min="16"
+          max="64"
+          step="1"
+          value="32"
+        />
+        <span id="sampling-steps-value"></span>
       </div>
       <div class="input-group">
         <label for="CFG-scale">CFG Scale:</label>
-        <input type="text" id="CFG-scale" />
-        <br />
+        <input
+          type="range"
+          id="CFG-scale"
+          name="CFG-scale"
+          min="1"
+          max="20"
+          step="1"
+          value="7"
+        />
+        <span id="CFG-scale-value">7</span>
       </div>
       <div class="input-group">
         <label for="seed">Seed:</label>
@@ -205,18 +241,42 @@
       </div>
       <div class="input-group">
         <label for="hires-step">Hires Step:</label>
-        <input type="text" id="hires-step" />
-        <br />
+        <input
+          type="range"
+          id="hires-step"
+          name="hires-step"
+          min="10"
+          max="20"
+          step="1"
+          value="15"
+        />
+        <span id="hires-step-value"></span>
       </div>
       <div class="input-group">
-        <label for="denoising-strength">Denoising strength:</label>
-        <input type="text" id="denoising-strength" />
-        <br />
+        <label for="denoising-strength">Denoising Strength:</label>
+        <input
+          type="range"
+          id="denoising-strength"
+          name="denoising-strength"
+          min="0"
+          max="1"
+          step="0.05"
+          value="0.5"
+        />
+        <span id="denoising-strength-value"></span>
       </div>
       <div class="input-group">
         <label for="upscale-by">Upscale By:</label>
-        <input type="text" id="upscale-by" />
-        <br />
+        <input
+          type="range"
+          id="upscale-by"
+          name="upscale-by"
+          min="1"
+          max="4"
+          step="0.5"
+          value="2"
+        />
+        <span id="upscale-by-value"></span>
       </div>
 
       <!-- 第三組 -->
@@ -228,8 +288,16 @@
       </div>
       <div class="input-group">
         <label for="weight">Weight:</label>
-        <input type="text" id="weight" />
-        <br />
+        <input
+          type="range"
+          id="weight"
+          name="weight"
+          min="0"
+          max="1"
+          step="0.05"
+          value="0.5"
+        />
+        <span id="weight-value"></span>
       </div>
       <div class="input-group">
         <label for="op-prompts">Optimized Prompts:</label>
@@ -261,9 +329,17 @@
       </div>
 
       <div class="input-group">
-        <label for="ControlNet-weight">ControlNet weight:</label>
-        <input type="text" id="ControlNet-weight" />
-        <br />
+        <label for="ControlNet-weight">ControlNet Weight:</label>
+        <input
+          type="range"
+          id="ControlNet-weight"
+          name="ControlNet-weight"
+          min="0"
+          max="1"
+          step="0.05"
+          value="0.5"
+        />
+        <span id="ControlNet-weight-value"></span>
       </div>
       <div class="input-group">
         <label for="preprocessor-preview">Preprocessor Preview:</label>
@@ -278,6 +354,9 @@
       <input type="hidden" id="submit-timestamp" name="submit-timestamp" />
 
       <button type="submit">Submit All</button>
+      <div id="notificationModal" style="display: none">
+        <div id="notificationMessage"></div>
+      </div>
     </form>
   </body>
   <script src="./submit.js"></script>
