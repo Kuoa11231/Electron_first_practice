@@ -14,7 +14,7 @@ const editableFields = [
   "denoisingStrength",
   "upscaleBy",
   "loraModelName",
-  "weight",
+  "loraWeight",
   "opPrompts",
   "preprocessorName",
   "controlNetWeight",
@@ -152,7 +152,7 @@ completeEditButton.addEventListener("click", function () {
         case "CFGScale":
         case "denoisingStrength":
         case "upscaleBy":
-        case "weight":
+        case "loraWeight":
         case "controlNetWeight":
           fieldValue = parseFloat(fieldValue);
           break;
@@ -297,7 +297,7 @@ ipcRenderer.on("send-image-details", (event, imageDetails) => {
   //第三組 - Lora
   document.getElementById("loraModelName").textContent =
     imageDetails.loraModelName;
-  document.getElementById("weight").textContent = imageDetails.weight;
+  document.getElementById("loraWeight").textContent = imageDetails.loraWeight;
   document.getElementById("opPrompts").textContent = imageDetails.opPrompts;
 
   //第四組 - ControlNet

@@ -254,7 +254,7 @@ document
 
       // 第三組 - Lora
       loraModelName: form["lora-model-name"].value,
-      weight: parseFloat(form["weight"].value),
+      loraWeight: parseFloat(form["Lora-weight"].value),
       opPrompts: form["op-prompts"].value.split(",").map((item) => item.trim()),
 
       // 第四組 - ControlNet
